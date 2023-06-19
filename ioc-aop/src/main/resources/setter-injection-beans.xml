@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="person" class="com.johann.iocaop.injection.setter.Person">
+        <property name="name" value="johann" />
+        <property name="age" value="18" />
+        <!-- 注入引用类型属性 -->
+        <!-- 以下两种注入方式是一样的，ref属性和ref子标签都可以用于引用其他的JavaBean-->
+        <property name="address" ref="address" />
+<!--        <property name="address">-->
+<!--            <ref bean="address" />-->
+<!--        </property>-->
+        <!-- 以下这种方式会创建一个新的JavaBean实例，作为属性值注入到address。可能会重复创建实例-->
+<!--        <property name="address">-->
+<!--            <bean class="com.johann.iocaop.injection.setter.Address"/>-->
+<!--        </property>-->
+
+        <!-- 注入集合类型属性 -->
+        <property name="hobbies" >
+                  <list>
+                      <value>篮球</value>
+                      <value>足球</value>
+                      <value>乒乓球</value>
+                  </list>
+        </property>
+
+        <!-- 注入Map类型属性 -->
+        <property name="scores" >
+            <map>
+                <entry key="语文" value="90" />
+                <entry key="数学" value="100" />
+                <entry key="英语" value="80" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="address" class="com.johann.iocaop.injection.setter.Address">
+        <property name="city" value="邯郸市"/>
+        <property name="street" value="丛台路"/>
+    </bean>
+
+</beans>

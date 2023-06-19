@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="person" class="com.johann.iocaop.injection.constructor.Person">
+        <!-- 1, 通过index属性指定参数位置，从0开始计数 -->
+        <constructor-arg index="0" value="johann"/>
+        <constructor-arg index="1" value="18"/>
+        <constructor-arg index="2">
+            <list>
+                <value>篮球</value>
+                <value>足球</value>
+                <value>乒乓球</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg index="3" ref="address"/>
+
+        <!-- 2, 通过type属性指定参数类型，如果有多个相同类型的参数，可以通过index属性指定位置。 -->
+        <!--<constructor-arg type="java.lang.String" value="johann"/>
+        <constructor-arg type="java.lang.Integer" value="18"/>
+        <constructor-arg type="java.util.List">
+            <list>
+                <value>篮球</value>
+                <value>足球</value>
+                <value>乒乓球</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="address" ref="address"/>-->
+
+        <!-- 3, 通过name属性指定参数名称 -->
+        <!--<constructor-arg name="name" value="johann"/>
+        <constructor-arg name="age" value="18"/>
+        <constructor-arg name="hobbies">
+            <list>
+                <value>篮球</value>
+                <value>足球</value>
+                <value>乒乓球</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="address" ref="address"/>-->
+    </bean>
+
+    <bean id="address" class="com.johann.iocaop.injection.constructor.Address">
+        <constructor-arg name="city" value="邯郸市"/>
+        <constructor-arg name="street" value="丛台路"/>
+    </bean>
+
+</beans>

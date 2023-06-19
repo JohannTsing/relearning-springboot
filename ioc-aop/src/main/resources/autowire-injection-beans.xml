@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- byName: 根据属性名称自动装配 -->
+<!--    <bean id="person" class="com.johann.iocaop.injection.autowire.Person" autowire="byName">-->
+<!--        <property name="name" value="johann" />-->
+<!--        <property name="age" value="18" />-->
+<!--        &lt;!&ndash; 此处 byName, pet字段属性为空&ndash;&gt;-->
+<!--    </bean>-->
+
+    <!-- byType: 根据属性类型自动装配 -->
+    <bean id="person" class="com.johann.iocaop.injection.autowire.Person" autowire="byType">
+        <property name="name" value="johann" />
+        <property name="age" value="18" />
+        <!-- 此处 byType， 报错：No qualifying bean of type 'com.johann.iocaop.injection.autowire.Pet' available: expected single matching bean but found 2: cat,dog-->
+        <!-- 可以在你所期望的候选 Bean 的 <bean/> 中将 primary 设置为 true，这就表明在多个候选 Bean 中该 Bean 是主要的 -->
+    </bean>
+
+    <!-- constructor: 根据构造器参数类型自动装配 -->
+<!--    <bean id="person" class="com.johann.iocaop.injection.autowire.Person" autowire="constructor">-->
+<!--        <constructor-arg name="name" value="johann" />-->
+<!--        <constructor-arg name="age" value="18" />-->
+<!--        <constructor-arg name="address" ref="address" />-->
+<!--    </bean>-->
+
+    <!-- no: 不自动装配 -->
+<!--    <bean id="person" class="com.johann.iocaop.injection.autowire.Person" autowire="no">-->
+<!--        <property name="name" value="johann" />-->
+<!--        <property name="age" value="18" />-->
+<!--        <property name="address" ref="address" />-->
+<!--    </bean>-->
+
+    <!-- autowire-candidate 属性用于控制 Bean 是否作为候选 Bean 参与自动装配，取值为 true 或 false -->
+<!--    <bean id="person" class="com.johann.iocaop.injection.autowire.Person" autowire-candidate="false">-->
+<!--        <property name="name" value="johann" />-->
+<!--        <property name="age" value="18" />-->
+<!--        <property name="address" ref="address" />-->
+<!--    </bean>-->
+
+    <bean id="address" class="com.johann.iocaop.injection.autowire.Address">
+        <property name="city" value="邯郸市"/>
+        <property name="street" value="丛台路"/>
+    </bean>
+
+    <bean id="cat" class="com.johann.iocaop.injection.autowire.Cat" />
+    <!-- 可以在你所期望的候选 Bean 的 <bean/> 中将 primary 设置为 true，这就表明在多个候选 Bean 中该 Bean 是主要的 -->
+    <bean id="dog" class="com.johann.iocaop.injection.autowire.Dog" primary="true" />
+</beans>
