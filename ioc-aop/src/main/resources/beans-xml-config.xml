@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 使用工厂方法创建bean -->
+    <bean id="myBeanFactory" class="com.johann.iocaop.bean_config.xml.MyBeanFactory" lazy-init="false"
+          factory-method="createFactoryInstance">
+        <constructor-arg name = "name" value="johann" />
+    </bean>
+
+    <!-- 延迟加载，使用工厂Bean的工厂方法创建bean -->
+    <bean id="myBean" class="com.johann.iocaop.bean_config.xml.MyBean" scope="singleton" lazy-init="true"
+          factory-bean="myBeanFactory" factory-method="createInstance">
+        <constructor-arg name = "name" value="jessie" />
+    </bean>
+</beans>

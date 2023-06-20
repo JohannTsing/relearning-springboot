@@ -1,11 +1,11 @@
 package com.johann.iocaop.injection.autowire;
 
 /**
- * @Description: Address
+ * @Description: AddressAutowire
  * @Auther: Johann
  * @Version: 1.0
  */
-public class Address {
+public class AddressAutowire {
     private String city;
 
     private String street;
@@ -20,7 +20,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
+        return "AddressAutowire{" +
                 "city='" + city + '\'' +
                 ", street='" + street + '\'' +
                 '}';

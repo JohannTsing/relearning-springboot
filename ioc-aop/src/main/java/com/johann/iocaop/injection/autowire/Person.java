@@ -11,16 +11,16 @@ public class Person {
 
     private int age;
 
-    private Address address;
+    private AddressAutowire addressAutowire;
 
     private Pet pet;
 
     public Person() {
     }
-    public Person(String name, int age, Address address, Pet pet) {
+    public Person(String name, int age, AddressAutowire addressAutowire, Pet pet) {
         this.name = name;
         this.age = age;
-        this.address = address;
+        this.addressAutowire = addressAutowire;
         this.pet = pet;
     }
 
@@ -32,8 +32,8 @@ public class Person {
         this.age = age;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddressAutowire(AddressAutowire addressAutowire) {
+        this.addressAutowire = addressAutowire;
     }
 
     public void setPet(Pet pet) {
@@ -45,7 +45,7 @@ public class Person {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
-                ", address=" + address +
+                ", addressAutowire=" + addressAutowire +
                 ", pet=" + (pet==null?"null":pet.say()) +
                 '}';
     }
