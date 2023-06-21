@@ -16,7 +16,7 @@ public class ConstructorInjecttionDemo {
 
     private ApplicationContext applicationContext;
     public ConstructorInjecttionDemo() {
-        applicationContext = new ClassPathXmlApplicationContext("constructor-injection-beans.xml");
+        applicationContext = new ClassPathXmlApplicationContext("beans-dependency-constructor-injection.xml");
     }
 
     public static void main(String[] args) {

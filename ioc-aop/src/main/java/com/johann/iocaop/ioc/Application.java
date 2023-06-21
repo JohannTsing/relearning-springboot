@@ -43,11 +43,11 @@ public class Application {
 //        beanFactory = new DefaultListableBeanFactory();
 //        XmlBeanDefinitionReader reader =
 //                new XmlBeanDefinitionReader((DefaultListableBeanFactory) beanFactory);
-//        //reader.loadBeanDefinitions(new ClassPathResource("beans.xml"));
-//        reader.loadBeanDefinitions("beans.xml");
+//        //reader.loadBeanDefinitions(new ClassPathResource("beans-basic.xml"));
+//        reader.loadBeanDefinitions("beans-basic.xml");
 
         // 加载到applicationContext,添加依赖：spring-context
-        applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+        applicationContext = new ClassPathXmlApplicationContext("beans-basic.xml");
     }
 
     public void sayHello() {

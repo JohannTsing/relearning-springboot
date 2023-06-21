@@ -16,7 +16,7 @@ public class SetterInjectionDemo {
 
     private ApplicationContext applicationContext;
     public SetterInjectionDemo() {
-        applicationContext = new ClassPathXmlApplicationContext("setter-injection-beans.xml");
+        applicationContext = new ClassPathXmlApplicationContext("beans-dependency-setter-injection.xml");
     }
 
     public static void main(String[] args) {

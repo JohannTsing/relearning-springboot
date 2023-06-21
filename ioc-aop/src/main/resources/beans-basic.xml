@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -8,3 +7,9 @@
     <bean id="hello" class="com.johann.iocaop.ioc.Hello" />
 
 </beans>
+
+<!--
+xmlns: 它是schema文件中的 targetNamespace 属性后面的值。
+xmlns:xsi: 说明当前的xml是schema一个实例文档
+xsi:schemaLocation: 它是schema文件的真实路径，它可以有多个，前面是namespace，后面是location，中间用空格隔开。
+-->

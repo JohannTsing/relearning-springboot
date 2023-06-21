@@ -13,7 +13,7 @@ public class BeanConfigXmlDemo {
     private ApplicationContext applicationContext;
 
     public BeanConfigXmlDemo() {
-        this.applicationContext = new ClassPathXmlApplicationContext("beans-xml-config.xml");
+        this.applicationContext = new ClassPathXmlApplicationContext("beans-config-xml.xml");
     }
 
     public static void main(String[] args) {

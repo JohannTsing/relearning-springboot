@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.johann.iocaop.bean_config.annotation" />
+
+</beans>
+
+<!--
+xmlns: 它是schema文件中的 targetNamespace 属性后面的值。
+xmlns:xsi: 说明当前的xml是schema一个实例文档
+xsi:schemaLocation: 它是schema文件的真实路径，它可以有多个，前面是namespace，后面是location，中间用空格隔开。
+xmlns:context: Spring 框架中用于配置上下文的命名空间。它允许在 Spring 配置文件中使用与上下文相关的标签和属性。
+
+除了 xmlns:context，Spring 还提供了以下命名空间：
+    xmlns:aop：用于配置 AOP 相关的标签和属性，例如 <aop:config> 和 <aop:aspectj-autoproxy>。
+    xmlns:tx：用于配置事务相关的标签和属性，例如 <tx:advice> 和 <tx:annotation-driven>。
+    xmlns:jee：用于配置 JEE 相关的标签和属性，例如 <jee:jndi-lookup> 和 <jee:jndi-lookup>。
+    xmlns:util：用于配置实用程序相关的标签和属性，例如 <util:list> 和 <util:properties>。
+    xmlns:beans：用于配置 Spring Bean 相关的标签和属性，例如 <beans:bean> 和 <beans:import>。`
+-->
+
+<!--
+context:component-scan标签说明：
+
+  扫描类路径以查找将自动注册为Spring beans的带注解组件。默认情况下，将检测到Spring提供的@Component、@Repository、@Service、
+@Controller、@RestController、@ControllerAdvice和@Configuration等注解。
+  注意：此标签隐含了'annotation-config'标签的效果，激活了组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、
+@Resource、@PersistenceContext和@PersistenceUnit等注解，这通常适用于自动检测到的组件（无需外部配置）。
+关闭'annotation-config'属性以停用此默认行为，例如，以便使用自定义的BeanPostProcessor定义来处理这些注解。
+  注意：您可以在包路径中使用占位符，但仅根据系统属性解析（类似于资源路径）。组件扫描将导致新的bean定义被注册；
+Spring的PropertySourcesPlaceholderConfigurer将适用于这些bean定义，就像对普通的bean定义一样，但不适用于组件扫描设置本身。
+  有关基于代码的组件扫描引导的替代方法，请参阅org.springframework.context.annotation.ComponentScan的javadoc。
+-->

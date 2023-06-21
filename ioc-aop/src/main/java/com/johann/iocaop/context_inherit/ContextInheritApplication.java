@@ -26,11 +26,11 @@ public class ContextInheritApplication {
 
     public ContextInheritApplication() {
         // 创建一个父级应用上下文
-        parentApplicationContext = new ClassPathXmlApplicationContext("parent-beans.xml");
+        parentApplicationContext = new ClassPathXmlApplicationContext("beans-basic-parent.xml");
         parentApplicationContext.setId("parentApplicationContext");
         // 创建一个子级应用上下文。
         // 使用给定的父级创建新的 ClassPathXmlApplicationContext，从给定的 XML 文档加载定义并自动刷新上下文。
-        childApplicationContext = new ClassPathXmlApplicationContext(new String[]{"child-beans.xml"}, parentApplicationContext);
+        childApplicationContext = new ClassPathXmlApplicationContext(new String[]{"beans-basic-child.xml"}, parentApplicationContext);
         childApplicationContext.setId("childApplicationContext");
         // 设置是否允许通过注册具有相同名称的不同定义来覆盖bean定义，并自动替换前者。否则，将引发异常。默认值为“true”
         childApplicationContext.setAllowBeanDefinitionOverriding(false);

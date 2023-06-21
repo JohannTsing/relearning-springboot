@@ -22,7 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class AutowireInjectionDemo {
     private ApplicationContext applicationContext;
     public AutowireInjectionDemo() {
-        applicationContext = new ClassPathXmlApplicationContext("autowire-injection-beans.xml");
+        applicationContext = new ClassPathXmlApplicationContext("beans-dependency-autowire-injection.xml");
     }
 
     public static void main(String[] args) {
