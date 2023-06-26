@@ -1,4 +1,4 @@
-package com.johann.iocaop.bean_config.annotation;
+package com.johann.iocaop.beanConfig.annotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,16 +11,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @version 1.0
  * @see
  **/
-public class BeanConfigAnnotation {
+public class BeanConfigAnnotationApplication {
 
     private ApplicationContext applicationContext;
 
     public static void main(String[] args) {
-        BeanConfigAnnotation beanConfigAnnotation = new BeanConfigAnnotation();
-        beanConfigAnnotation.sayHello(beanConfigAnnotation.applicationContext.getBean(Hello.class));
+        BeanConfigAnnotationApplication beanConfigAnnotationApplication = new BeanConfigAnnotationApplication();
+        Hello helloBean = beanConfigAnnotationApplication.applicationContext.getBean("helloBean", Hello.class);
+        beanConfigAnnotationApplication.sayHello(helloBean);
     }
 
-    public BeanConfigAnnotation() {
+    public BeanConfigAnnotationApplication() {
         applicationContext = new ClassPathXmlApplicationContext("beans-config-annotation.xml");
     }
 

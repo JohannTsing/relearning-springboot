@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config />
+
+    <bean id="lifecycle-hello" class="com.johann.iocaop.customization.lifeCycle.Hello"
+          init-method="initMethod" destroy-method="destroyMethod">
+    </bean>
+</beans>
+
+<!--
+<context:annotation-config />标签说明：
+
+该注解用于启用Spring的注解驱动功能
+
+激活各种注解以在bean类中被检测到：Spring的@Required和@Autowired，以及JSR 250的@PostConstruct、@PreDestroy和@Resource（如果可用）、
+JAX-WS的@WebServiceRef（如果可用）、EJB 3的@EJB（如果可用）和JPA的@PersistenceContext和@PersistenceUnit（如果可用）。
+或者，您可以选择激活这些注解的单个 BeanPostProcessors。
+
+注意：此标记不激活处理Spring的@Transactional或EJB 3的@TransactionAttribute注解。考虑使用tx:annotation-driven标记来实现这个目的。
+-->

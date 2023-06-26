@@ -1,4 +1,4 @@
-package com.johann.iocaop.bean_config.xml;
+package com.johann.iocaop.beanConfig.xml;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,22 +9,22 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @version 1.0
  * @see
  **/
-public class BeanConfigXmlDemo {
+public class BeanConfigXmlApplication {
     private ApplicationContext applicationContext;
 
-    public BeanConfigXmlDemo() {
+    public BeanConfigXmlApplication() {
         this.applicationContext = new ClassPathXmlApplicationContext("beans-config-xml.xml");
     }
 
     public static void main(String[] args) {
-        BeanConfigXmlDemo beanConfigXmlDemo = new BeanConfigXmlDemo();
-        beanConfigXmlDemo.sayHello();
+        BeanConfigXmlApplication beanConfigXmlApplication = new BeanConfigXmlApplication();
+        beanConfigXmlApplication.sayHello();
     }
 
     public void sayHello() {
         // 延迟加载
-        //MyBean myBean = applicationContext.getBean("myBean", MyBean.class);
-        //System.out.println(myBean.hello());
+        MyBean myBean = applicationContext.getBean("myBean", MyBean.class);
+        System.out.println(myBean.hello());
     }
 
 }

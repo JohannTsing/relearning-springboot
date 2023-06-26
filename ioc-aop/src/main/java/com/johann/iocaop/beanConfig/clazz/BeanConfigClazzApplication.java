@@ -1,9 +1,7 @@
-package com.johann.iocaop.bean_config.clazz;
+package com.johann.iocaop.beanConfig.clazz;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Bean配置方式: 基于Java类配置
@@ -11,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0
  * @see
  **/
-public class BeanConfigClazz {
-    public BeanConfigClazz() {
+public class BeanConfigClazzApplication {
+    public BeanConfigClazzApplication() {
         System.out.println("BeanConfigClazz容器启动初始化。。。");
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ClazzConfig.class);
     }
 
     public static void main(String[] args) {
-        new BeanConfigClazz();
+        new BeanConfigClazzApplication();
     }
 }

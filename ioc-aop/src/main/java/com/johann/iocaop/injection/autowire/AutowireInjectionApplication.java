@@ -19,14 +19,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Version: 1.0
  */
 @Log4j2
-public class AutowireInjectionDemo {
+public class AutowireInjectionApplication {
     private ApplicationContext applicationContext;
-    public AutowireInjectionDemo() {
+    public AutowireInjectionApplication() {
         applicationContext = new ClassPathXmlApplicationContext("beans-dependency-autowire-injection.xml");
     }
 
     public static void main(String[] args) {
-        AutowireInjectionDemo demo = new AutowireInjectionDemo();
+        AutowireInjectionApplication demo = new AutowireInjectionApplication();
         Person person = demo.applicationContext.getBean("person", Person.class);
         log.info(person);
     }

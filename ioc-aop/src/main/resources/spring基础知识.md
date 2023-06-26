@@ -71,3 +71,240 @@ Spring框架提供了三种自动装配的方式，分别是`byName`、`byType`�
 > 也可以在你所期望的候选 Bean 的 <bean/> 中将 primary 设置为 true，这样 Spring 就会优先选择这个 Bean。
 
 - 示例: [自动装配xml配置](beans-dependency-autowire-injection.xml)
+
+### 4, Bean的配置方式
+
+#### 4.1, 基于XML的配置方式
+
+#### 4.2, 基于注解的配置方式
+
+#### 4.3, 基于Java的配置方式
+
+### 5, Bean的作用域(Scope)
+
+#### 5.1, 单例(Singleton)
+
+#### 5.2, 原型(Prototype)
+
+#### 5.3, 请求(Request)
+
+#### 5.4, 会话(Session)
+
+#### 5.5, 全局会话(Global Session)
+
+### 6, 定制容器与 Bean 的行为
+
+#### 6.1, Bean的生命周期
+
+Spring中的Bean生命周期包括以下阶段：
+1. 实例化：当Spring容器启动时，它会根据配置文件或注解创建Bean的实例。
+2. 属性赋值【注入依赖】：在实例化后，Spring容器会将Bean的属性值注入到Bean实例中。
+3. 初始化：在属性赋值完成后，Spring容器会调用Bean的初始化方法，可以通过实现 InitializingBean 接口或在配置文件中指定init-method来定义初始化方法。
+4. 使用：初始化完成后，Bean可以被应用程序使用。
+5. 销毁：当Spring容器关闭时，它会调用Bean的销毁方法，可以通过实现DisposableBean接口或在配置文件中指定destroy-method来定义销毁方法。
+
+总的来说，Bean的生命周期可以概括为实例化、属性赋值【注入依赖】、初始化、使用和销毁。在这个过程中，Spring容器会负责管理Bean的生命周期，确保Bean在应用程序中正确地被创建、初始化、使用和销毁。
+
+#### 6.2, Bean的初始化方法和销毁方法
+可以通过以下三种方式，定制Bean初始化和销毁方法，它们的优先级顺序如序号所示
+1. @PostConstruct和@PreDestroy注解【JSR-250】；
+2. 实现InitializingBean和DisposableBean接口；
+3. 在<bean></bean>中指定init-method和destroy-method属性。（@Bean中配置的initMethod或destroyMethod）
+
+- 示例: [Bean的初始化和销毁方法](beans-lifecycle.xml)
+
+#### 6.3, Bean的后置处理器
+Bean的后置处理器是Spring框架中的一个重要组件，它可以在Bean实例化、属性注入和初始化完成后进行一些额外的处理操作。后置处理器可以对Bean进行修改、增强或者替换，从而实现一些特定的功能。
+
+Spring框架中提供了两个常用的后置处理器接口：BeanPostProcessor和BeanFactoryPostProcessor。
+
+BeanPostProcessor接口定义了两个方法：postProcessBeforeInitialization和postProcessAfterInitialization。
+这两个方法分别在Bean初始化之前和之后被调用，可以对Bean进行修改或者增强。
+
+BeanFactoryPostProcessor接口定义了一个方法：postProcessBeanFactory。
+这个方法在BeanFactory加载Bean定义之后、初始化Bean之前被调用，可以对Bean定义进行修改或者增强。
+
+通过实现这些后置处理器接口，我们可以在Spring框架中实现一些高级的功能，比如AOP、事务管理等。
+
+- 示例: [Bean的后置处理器](com/johann/iocaop/customization/postProcessor/)
+
+#### 6.4, Aware接口
+Spring中的Aware接口是一组接口，它们可以让Bean感知到Spring容器的存在，从而获取Spring容器中的一些资源或者进行一些操作。
+
+Aware接口是一个标记接口，它没有任何方法，只是用来标识具有特定功能的接口。
+
+Spring中的Aware接口有以下几种：
+1. 【ApplicationContextAware】：让Bean获取ApplicationContext对象，从而可以获取Spring容器中的其他Bean。
+2. BeanNameAware：让Bean获取自己在Spring容器中的名称。
+3. BeanFactoryAware：让Bean获取BeanFactory对象，从而可以获取Spring容器中的其他Bean。
+4. EnvironmentAware：让Bean获取Environment对象，从而可以获取Spring应用程序的环境变量和属性。
+5. ResourceLoaderAware：让Bean获取ResourceLoader对象，从而可以加载资源文件。
+6. ServletContextAware：让Bean获取ServletContext对象，从而可以获取Web应用程序的上下文信息。
+7. MessageSourceAware：让Bean获取MessageSource对象，从而可以获取国际化信息。
+8. 【ApplicationEventPublisherAware】：让Bean获取ApplicationEventPublisher对象，从而可以发布事件。
+9. LoadTimeWeaverAware：让Bean获取LoadTimeWeaver对象，从而可以进行类加载时的增强。
+10. EmbeddedValueResolverAware：让Bean获取EmbeddedValueResolver对象，从而可以解析占位符。
+11. ConversionServiceAware：让Bean获取ConversionService对象，从而可以进行类型转换。
+12. ResourceLoaderAware：让Bean获取ResourceLoader对象，从而可以加载资源文件。
+
+#### 6.4, 事件机制
+Spring中的事件机制是指，当某个事件发生时，Spring会自动通知所有对该事件感兴趣的监听器，从而让监听器可以进行相应的处理。
+事件机制是Spring框架中非常重要的一个特性，它可以让不同的组件之间进行松耦合的通信，从而提高系统的可扩展性和可维护性。
+
+ApplicationContext 提供了一套事件机制，在容器发生变动时我们可以通过 ApplicationEvent 的子类通知到 ApplicationListener 接口的实现类，做对应的处理。
+例如，ApplicationContext 在启动、停止、关闭和刷新 a 时，分别会发出 ContextStartedEvent、ContextStoppedEvent、ContextClosedEvent
+和 ContextRefreshedEvent 事件，这些事件就让我们有机会感知当前容器的状态。
+
+- 示例: [事件机制](com/johann/iocaop/customization/event/)
+
+#### 6.5, 优雅地关闭容器
+Java 进程在退出时，我们可以通过 Runtime.getRuntime().addShutdownHook() 方法添加一些钩子，在关闭进程时执行特定的操作。
+如果是 Spring 应用，在进程退出时也要能正确地执行一些清理的方法。
+
+ConfigurableApplicationContext 接口扩展自 ApplicationContext，其中提供了一个 registerShut-downHook()。
+AbstractApplicationContext 类实现了该方法，正是调用了前面说到的 Runtime.get-Runtime().addShutdownHook()，并且在其内部调用了 doClose() 方法。
+
+设想在生产代码里有这么一种情况：一个Bean通过ApplicationContextAware注入了Application-Context，业务代码根据逻辑判断从
+ApplicationContext 中取出对应名称的 Bean，再进行调用；问题出现在应用程序关闭时，容器已经开始销毁 Bean 了，可是这段业务代码还在执行，
+仍在继续尝试从容器中获取 Bean，而且代码还没正确处理此处的异常……这该如何是好？
+
+针对这种情况，我们可以借助 Spring Framework 提供的 Lifecycle 来感知容器的启动和停止，容器会将启动和停止的信号传播给实现了该接口的组件和上下文。
+
+- 示例: [优雅地关闭容器](com/johann/iocaop/customization/shutdown/ShutdownApplication.java)
+
+### 7, 容器中的抽象
+
+#### 7.1, 环境抽象
+Spring中代表程序运行环境的 Environment 接口包含两个关键信息：Profile 和 Properties
+
+##### 7.1.1, Profile 抽象
+Spring中的Profile是一种机制，用于根据不同的环境或条件，选择不同的配置文件或bean定义。
+它可以让开发人员在不同的环境中使用不同的配置，例如开发、测试、生产等环境。
+通过使用Profile，可以轻松地切换不同的配置，而不需要手动修改代码或配置文件。
+
+Profile抽象是Spring框架中的一个接口，它定义了一些方法，用于获取当前激活的Profile。
+如果使用 XML 进行配置，可以在 <beans/> 的 profile 属性中进行设置。
+如果使用 Java 类的配置方式，可以在带有 @Configuration 注解的类上，或者在带有 @Bean 注解的方法上添加 @Profile 注解，并在其中指定该配置生效的具体 Profile。
+```java
+@Configuration
+@Profile("dev")
+public class DevConfig {
+ @Bean
+ public Hello hello() {
+ Hello hello = new Hello();
+ hello.setName("dev");
+ return hello;
+ }
+}
+
+@Configuration
+@Profile("test")
+public class TestConfig {
+ @Bean
+ public Hello hello() {
+ Hello hello = new Hello();
+ hello.setName("test");
+ return hello;
+ }
+}
+```
+
+通过如下两种方式可以指定要激活的 Profile（多个 Profile 用逗号分隔）:
+* ConfigurableEnvironment.setActiveProfiles() 方法指定要激活的 Profile（通过 Application-Context.getEnvironment() 方法可获得 Environment）；
+* spring.profiles.active 属性指定要激活的 Profile。
+
+例如，在启动应用程序时，可以通过如下方式指定要激活的 Profile：`java -Dspring.profiles.active="dev" -jar xxx.jar`
+
+Spring Framework 还提供了默认的 Profile，一般名为 default，但也可以通过 Configurable-Environment.setDefaultProfiles() 和 spring.profiles.default 来修改这个名称。
+
+##### 7.1.2, PropertySource 抽象
+Spring中的PropertySource抽象是一个接口，它定义了一些方法，用于获取属性值。它是Spring框架中的一个核心概念，用于管理应用程序的配置信息。
+PropertySource抽象可以从不同的来源获取属性值，例如系统属性、环境变量、配置文件等。
+
+在Spring中，可以通过在配置文件中使用@PropertySource注解来指定属性源，从而获取属性值。
+PropertySource抽象还可以与其他Spring框架中的组件一起使用，例如Environment、PropertyResolver等。
+
+在 Spring 中，一般属性用小写单词表示并用点分隔，比如 foo.bar，如果是从环境变量中获取属性，会按照 foo.bar、foo_bar、FOO.BAR 和 FOO_BAR 的顺序来查找。
+```java
+@Configuration
+@PropertySource("classpath:application.properties")
+public class AppConfig {
+
+    @Autowired
+    private Environment env;
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
+        return dataSource;
+    }
+}
+
+```
+@Value 注解，也能获取属性，获取不到时则返回默认值：
+```java
+public class Hello {
+ @Value("${foo.bar:NONE}") // :后是默认值
+ private String value;
+ 
+ public void hello() {
+ System.out.println("foo.bar: " + value);
+ }
+}
+```
+${} 占位符可以出现在 Java 类配置或 XML 文件中，Spring 容器会试图从各种已经配置了的来源中解析属性。
+
+要添加属性来源，可以在 @Configuration 类上增加 @PropertySource 注解，例如：
+```java
+@Configuration
+@PropertySource(value = "classpath:/META-INF/resources/app.properties",ignoreResourceNotFound = true)
+public class Config {
+    
+}
+```
+如果使用 XML 进行配置，可以像下面这样：
+`<context:property-placeholder location="classpath:/META-INF/resources/app.properties" ignore-resource-not-found="false"  order="1"/>`
+
+通常我们的预期是一定能找到需要的属性，但也有这个属性可有可无的情况，这时将注解的 ignoreResourceNotFound 或者 XML 文件的 ignore-resource-not-found 设置为 true 即可。
+如果存在多个配置，则可以通过 @Order 注解或 XML 文件的 order 属性来指定顺序。
+
+> Spring Framework是如何实现占位符解析的?
+> 
+> Spring Framework实现占位符解析的主要方式是通过PropertyPlaceholderConfigurer类。
+> PropertyPlaceholderConfigurer是一个BeanFactoryPostProcessor，它可以在BeanFactory加载BeanDefinition之前，对BeanDefinition中的占位符进行解析。
+> 
+> 如果使用 <context:property-placeholder/>，Spring Framework 会自动注册一个 PropertySourcesPlaceholderConfigurera。
+> 如果是 Java 配置，则需要我们自己用 @Bean 来注册一个。
+> 
+> PropertyPlaceholderConfigurer可以从多个属性源中获取属性值，例如系统属性、环境变量、配置文件等。
+> 在解析占位符时，它会按照一定的优先级顺序查找属性值，直到找到第一个非空值为止。
+```java
+@Configuration
+@PropertySource("classpath:application.properties")
+public class AppConfig {
+ 
+    // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
+    @Bean
+    public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+        configurer.setLocation(new ClassPathResource("application.properties"));
+        return configurer;
+    }
+ 
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("${db.driver}");
+        dataSource.setUrl("${db.url}");
+        dataSource.setUsername("${db.username}");
+        dataSource.setPassword("${db.password}");
+        return dataSource;
+    }
+}
+``` 
+
+#### 7.2, 任务抽象

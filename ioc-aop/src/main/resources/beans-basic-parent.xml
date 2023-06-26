@@ -5,11 +5,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="hello" class="com.johann.iocaop.context_inherit.Hello">
+    <bean id="hello" class="com.johann.iocaop.contextInherit.Hello">
         <property name="name" value="Parent"/>
     </bean>
 
-    <bean id="parentHello" class="com.johann.iocaop.context_inherit.Hello">
+    <bean id="parentHello" class="com.johann.iocaop.contextInherit.Hello">
         <property name="name" value="Parent"/>
     </bean>
 </beans>

@@ -1,8 +1,6 @@
-package com.johann.iocaop.bean_config.annotation;
+package com.johann.iocaop.beanConfig.annotation;
 
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * <p>

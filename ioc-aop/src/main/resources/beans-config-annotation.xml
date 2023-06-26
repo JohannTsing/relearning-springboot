@@ -7,7 +7,11 @@
         http://www.springframework.org/schema/context
         https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.johann.iocaop.bean_config.annotation" />
+    <context:component-scan base-package="com.johann.iocaop.beanConfig.annotation" />
+    <!-- 关闭'annotation-config'属性以停用此默认行为，例如，以便使用自定义的BeanPostProcessor定义来处理这些注解。 -->
+    <!--annotation-config="false"-->
+
+    <!--<context:annotation-config />-->
 
 </beans>
 
@@ -23,17 +27,34 @@ xmlns:context: Spring 框架中用于配置上下文的命名空间。它允许�
     xmlns:jee：用于配置 JEE 相关的标签和属性，例如 <jee:jndi-lookup> 和 <jee:jndi-lookup>。
     xmlns:util：用于配置实用程序相关的标签和属性，例如 <util:list> 和 <util:properties>。
     xmlns:beans：用于配置 Spring Bean 相关的标签和属性，例如 <beans:bean> 和 <beans:import>。`
+    xmlns:task：用于配置Spring框架提供的任务调度相关的组件。
+    xmlns:cache：用于配置Spring框架提供的缓存相关的组件。
+    xmlns:websocket：用于配置WebSocket相关的组件。
+    xmlns:security：用于配置Spring Security相关的组件。
 -->
-
 <!--
-context:component-scan标签说明：
+<context:component-scan />标签说明：
 
-  扫描类路径以查找将自动注册为Spring beans的带注解组件。默认情况下，将检测到Spring提供的@Component、@Repository、@Service、
-@Controller、@RestController、@ControllerAdvice和@Configuration等注解。
-  注意：此标签隐含了'annotation-config'标签的效果，激活了组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、
-@Resource、@PersistenceContext和@PersistenceUnit等注解，这通常适用于自动检测到的组件（无需外部配置）。
-关闭'annotation-config'属性以停用此默认行为，例如，以便使用自定义的BeanPostProcessor定义来处理这些注解。
-  注意：您可以在包路径中使用占位符，但仅根据系统属性解析（类似于资源路径）。组件扫描将导致新的bean定义被注册；
-Spring的PropertySourcesPlaceholderConfigurer将适用于这些bean定义，就像对普通的bean定义一样，但不适用于组件扫描设置本身。
-  有关基于代码的组件扫描引导的替代方法，请参阅org.springframework.context.annotation.ComponentScan的javadoc。
+扫描类路径以查找带注释的组件，这些组件将自动注册为Spring bean。默认情况下，将检测到Spring提供的@Component、@Repository、
+@Service、@Controller、@RestController、@ControllerAdvice和@Configuration等构造型。
+
+注意：此标记包含着'annotation-config'标记的效果，激活组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、
+@Resource、@PersistenceContext和@PersistenceUnit注解，这通常是自动检测组件所需的（没有外部配置）。
+关闭'annotation-config'属性以停用此默认行为，例如为了使用自定义BeanPostProcessor定义来处理这些注解。
+
+注意：您可以在包路径中使用占位符，但只能针对系统属性进行解析（类似于资源路径）。组件扫描会导致新的bean定义被注册；
+Spring的 PropertySourcesPlaceholderConfigurer 将应用于这些bean定义，就像普通的bean定义一样，但它不会应用于组件扫描设置本身。
+
+有关基于代码的替代方案以引导组件扫描的信息，请参阅org.springframework.context.annotation.ComponentScan的javadoc。
+-->
+<!--
+<context:annotation-config />标签说明：
+
+该注解用于启用Spring的注解驱动功能
+
+激活各种注解以在bean类中被检测到：Spring的@Required和@Autowired，以及JSR 250的@PostConstruct、@PreDestroy和@Resource（如果可用）、
+JAX-WS的@WebServiceRef（如果可用）、EJB 3的@EJB（如果可用）和JPA的@PersistenceContext和@PersistenceUnit（如果可用）。
+或者，您可以选择激活这些注解的单个BeanPostProcessors。
+
+注意：此标记不激活处理Spring的@Transactional或EJB 3的@TransactionAttribute注解。考虑使用tx:annotation-driven标记来实现这个目的。
 -->

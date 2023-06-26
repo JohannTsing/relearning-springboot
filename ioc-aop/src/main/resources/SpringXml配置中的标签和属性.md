@@ -21,6 +21,7 @@
 17. `singleton`属性：用于指定是否强制使用单例模式，如果设置为`false`，则每次获取Bean都会创建一个新的实例。
 18. `abstract`属性：用于指定该Bean是否为抽象Bean，如果设置为`true`，则不能被实例化。
 19. `property`子标签：用于设置Bean的属性值，包括属性名称、属性值、属性类型等。
+20. `profile`属性：用于指定Bean所属的环境，只有当前环境与Bean所属环境一致时，才会创建该Bean实例。
 
 #### `<bean></bean>`标签的子标签
 1. `<constructor-arg></constructor-arg>`：用于设置JavaBean的构造函数参数。

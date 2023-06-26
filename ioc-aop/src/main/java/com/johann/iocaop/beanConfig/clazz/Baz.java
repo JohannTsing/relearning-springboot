@@ -1,4 +1,4 @@
-package com.johann.iocaop.bean_config.clazz;
+package com.johann.iocaop.beanConfig.clazz;
 
 /**
  * <p>

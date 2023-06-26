@@ -1,4 +1,4 @@
-package com.johann.iocaop.context_inherit;
+package com.johann.iocaop.contextInherit;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

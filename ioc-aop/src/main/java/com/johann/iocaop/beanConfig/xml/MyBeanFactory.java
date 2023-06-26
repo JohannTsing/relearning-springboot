@@ -1,4 +1,4 @@
-package com.johann.iocaop.bean_config.xml;
+package com.johann.iocaop.beanConfig.xml;
 
 /**
  * <p>

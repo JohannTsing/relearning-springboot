@@ -12,15 +12,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Version: 1.0
  */
 @Log4j2
-public class SetterInjectionDemo {
+public class SetterInjectionApplication {
 
     private ApplicationContext applicationContext;
-    public SetterInjectionDemo() {
+    public SetterInjectionApplication() {
         applicationContext = new ClassPathXmlApplicationContext("beans-dependency-setter-injection.xml");
     }
 
     public static void main(String[] args) {
-        SetterInjectionDemo demo = new SetterInjectionDemo();
+        SetterInjectionApplication demo = new SetterInjectionApplication();
         Person person = demo.applicationContext.getBean("person", Person.class);
         log.info(person);
     }
