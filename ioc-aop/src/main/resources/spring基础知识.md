@@ -308,3 +308,141 @@ public class AppConfig {
 ``` 
 
 #### 7.2, 任务抽象
+
+##### 7.2.1, TaskExecutor 抽象
+在Spring中，`TaskExecutor`是一个接口，定义了执行异步任务的方法，可以用来发送邮件、短信、推送等。
+
+`TaskExecutor`的实现：
+1. `SimpleAsyncTaskExecutor`：一个简单的TaskExecutor实现，每次执行任务时都会创建一个新的线程来处理任务。
+2. `SyncTaskExecutor`：一个同步的TaskExecutor实现，每次执行任务时都会在当前线程中执行任务。
+3. `ConcurrentTaskExecutor`：一个基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列等参数。
+4. `ThreadPoolTaskExecutor`：一个更高级的基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列、线程池关闭时的等待时间等参数。
+5. `SimpleThreadPoolTaskExecutor`：一个简单的基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列等参数。
+6. `WorkManagerTaskExecutor`：一个基于Java EE WorkManager的TaskExecutor实现，可以在Java EE容器中使用。
+7. `TimerTaskExecutor`：一个基于Java Timer的TaskExecutor实现，可以在Java EE容器中使用。
+
+配置一个任务执行器：
+```xml
+<!-- 配置一个线程池任务执行器 -->
+<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <!-- 核心线程数，线程池维护的最小线程数 -->
+    <property name="corePoolSize" value="4"/>
+    <!-- 最大线程数，线程池维护的最大线程数 -->
+    <property name="maxPoolSize" value="8"/>
+    <!-- 队列容量，用于缓存等待执行的任务的队列 -->
+    <property name="queueCapacity" value="32"/>
+    <!-- 拒绝策略，当线程池已满，无法继续执行任务时的处理方式 -->
+    <property name="rejectedExecutionHandler">
+        <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+    </property>
+    <!-- 线程名前缀，用于区分不同的线程池 -->
+    <property name="threadNamePrefix" value="timerTaskExecutor-"/>
+    <!-- 是否等待所有任务执行完毕再关闭线程池 -->
+    <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    <!-- 等待所有任务执行完毕的超时时间 -->
+    <property name="awaitTerminationSeconds" value="60"/>
+</bean>
+```
+或者使用`<task:executor/>`标签进行配置
+```xml
+<task:executor id="taskExecutor" pool-size="4-8" queue-capacity="32" rejection-policy="CALLER_RUNS"/>
+<!-- <task:executor id="taskExecutor" executor="myTaskExecutor_id" pool-size="4-8" queue-capacity="32" rejection-policy="CALLER_RUNS"/> -->
+```
+当使用`<task:executor/>`进行配置时，默认使用的是`ThreadPoolTaskExecutor`实现。
+`<task:executor/>`是Spring提供的一个简化配置的方式，它会自动创建一个`ThreadPoolTaskExecutor`实例，并根据配置参数设置线程池的核心线程数、最大线程数、等待队列容量等属性。
+如果需要使用其他的`TaskExecutor`实现，可以通过`executor`属性指定具体的实现类。
+
+> 1. `核心线程数`和`最大线程数`的区别？
+> 
+> `核心线程数`是线程池中最少的线程数，也是线程池中一直存在的线程数。当有新的任务提交到线程池时，如果当前线程数小于核心线程数，
+> 那么线程池会创建新的线程来处理任务。如果当前线程数等于或大于核心线程数，那么线程池会将任务放入等待队列中，等待空闲线程来处理任务。
+> 
+> `最大线程数`是线程池中最多的线程数，它限制了线程池中的线程数量。当等待队列已满且当前线程数小于最大线程数时，线程池会创建新的线程来处理任务。
+> 如果当前线程数已经等于或大于最大线程数，那么线程池会根据拒绝策略来处理任务。
+> 
+> 这两个配置项之间的区别在于，核心线程数是线程池中一直存在的线程数，而最大线程数是线程池中最多的线程数。
+> 
+> ThreadPoolTaskExecutor 有一个 keepAliveSeconds 的属性，通过它可以调整空闲状态线程的存活时间。
+> 如果当前线程数大于核心线程数，到存活时间后就会清理线程。
+> 
+> 
+> 2. 线程池的拒绝策略
+> 
+> 线程池的等待队列是一个先进先出的队列，用于存储等待执行的任务。当线程池中的所有线程都在执行任务时，新的任务会被放入等待队列中，
+> 直到有空闲的线程可用来执行任务。线程池的等待队列可以是有界的或无界的，有界队列可以避免任务过多导致内存溢出，但可能会导致任务被拒绝执行。
+> 无界队列可以保证所有任务都能被执行，但可能会导致内存占用过高。
+> 
+> Java中，线程池的等待队列默认是无界队列，即容量为 Integer.MAX_VALUE。这意味着线程池可以接受任意数量的任务，但也可能导致内存占用过高。
+> 如果需要限制等待队列的容量，可以使用有界队列，例如 ArrayBlockingQueue 或 LinkedBlockingQueue。
+> 
+> 在Java中，线程池的“队列满”时的处理策略由拒绝策略（RejectedExecutionHandler）来控制。
+> 当线程池中的等待队列已满，且所有线程都在执行任务时，新的任务将被拒绝执行，并根据拒绝策略进行处理。
+> 
+> Java中提供了四种拒绝策略：
+> * `AbortPolicy`（默认）：直接抛出 RejectedExecutionException 异常，阻止系统正常运行。
+> * `CallerRunsPolicy`：只要线程池未关闭，该策略直接在调用者线程中，运行当前被丢弃的任务。显然这样做不会真的丢弃任务，但是，任务提交线程的性能极有可能会急剧下降。
+> * `DiscardOldestPolicy`：丢弃最老的一个请求，也就是即将被执行的一个任务，并尝试再次提交当前任务。
+> * `DiscardPolicy`：直接丢弃任务，不予任何处理也不抛出异常。
+
+在配置好了 TaskExecutor 后，可以直接调用它的 execute() 方法，传入一个 Runnable 对象；也
+可以在方法上使用 @Async 注解，这个方法可以是空返回值，也可以返回一个 Future ：
+```java
+@Service
+public class AsyncService {
+    /**
+     * 使用`@Async`注解标注了一个异步方法`asyncMethod()`，并指定了使用名为`taskExecutor`的`ThreadPoolTaskExecutor`来执行异步任务。
+     * 当我们调用`asyncMethod()`方法时，Spring会自动将方法调用转换为异步任务，并使用`taskExecutor`来执行任务。
+     */
+    @Async("taskExecutor")
+    public void asyncMethod() {
+        // 异步方法体
+    }
+}
+```
+
+在使用`@Async`注解时，需要在配置类上增加`@EnableAsync`注解，或者在XML文件中增加`<task:annotation-driven/>`配置，开启对它的支持。
+```java
+@Configuration
+@EnableAsync
+public class AppConfig {
+    // 配置其他bean
+}
+```
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 配置其他bean -->
+
+    <!-- 开启对@Async注解的支持 -->
+    <task:annotation-driven />
+</beans>
+```
+
+> 注意：
+> 
+> 对于异步执行的方法，由于在触发时主线程就返回了，我们的代码在遇到异常时可能根本无法感知，而且抛出的异常也不会被捕获，
+> 因此最好我们能自己实现一个 AsyncUncaught-ExceptionHandler 对象来处理这些异常，最起码打印一个异常日志，方便问题排查。
+
+##### 7.2.2, TaskScheduler 抽象
+Spring中的`TaskScheduler`是一个用于调度任务的接口，它可以在指定的时间间隔或者固定的时间点执行任务。
+
+`TaskScheduler`接口提供了多种方法来实现不同的调度策略，例如`schedule(Runnable task, Trigger trigger)`方法可以在指定的时间点执行任务，
+`scheduleAtFixedRate(Runnable task, long period)`方法可以按照固定的时间间隔执行任务，
+`scheduleWithFixedDelay(Runnable task, long delay)`方法可以在任务执行完成后等待一段时间再执行下一次任务。
+
+`TaskScheduler`接口的实现：
+1. `ThreadPoolTaskScheduler`：基于线程池的`TaskScheduler`实现，可以在指定的时间间隔内执行任务。
+2. `ConcurrentTaskScheduler`：基于`ScheduledExecutorService`的`TaskScheduler`实现，可以在指定的时间间隔内执行任务。
+3. `SimpleThreadPoolTaskScheduler`：基于线程池的`TaskScheduler`实现，可以在指定的时间间隔内执行任务。与`ThreadPoolTaskScheduler`不同的是，它使用`SimpleAsyncTaskExecutor`作为默认的`TaskExecutor`实现。
+4. `TimerTaskScheduler`：基于`java.util.Timer`的`TaskScheduler`实现，可以在指定的时间间隔内执行任务。
+5. `CustomizableThreadFactory`：一个可定制的线程工厂，可以用于创建自定义的线程池。
+
+> `ThreadPoolTaskScheduler`和`ConcurrentTaskScheduler`是最常用的两种实现。
+> `ThreadPoolTaskScheduler`使用`ThreadPoolTaskExecutor`作为默认的`TaskExecutor`实现，
+> `ConcurrentTaskScheduler`使用`ScheduledExecutorService`作为默认的`TaskExecutor`实现。
