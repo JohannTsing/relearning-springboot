@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 配置其他bean -->
+    <!-- 使用`<bean></bean>`标签配置一个任务执行器 -->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数，线程池维护的最小线程数 -->
+        <property name="corePoolSize" value="4"/>
+        <!-- 最大线程数，线程池维护的最大线程数 -->
+        <property name="maxPoolSize" value="8"/>
+        <!-- 队列容量，用于缓存等待执行的任务的队列 -->
+        <property name="queueCapacity" value="32"/>
+        <!-- 拒绝策略，当线程池已满，无法继续执行任务时的处理方式 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+        <!-- 线程名前缀，用于区分不同的线程池 -->
+        <property name="threadNamePrefix" value="taskExecutor-"/>
+        <!-- 是否等待所有任务执行完毕再关闭线程池 -->
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <!-- 等待所有任务执行完毕的超时时间 -->
+        <property name="awaitTerminationSeconds" value="60"/>
+    </bean>
+
+    <!-- 使用`<task:executor/>`标签配置任务执行器，默认使用的是`ThreadPoolTaskExecutor`实现 -->
+     <task:executor id="taskExecutor" pool-size="4-8" queue-capacity="32" keep-alive="60" rejection-policy="CALLER_RUNS"/>
+
+
+    <!-- 使用`<bean></bean>`标签配置一个任务调度器 -->
+    <bean id="taskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+        <!-- 设置线程池大小为10 -->
+        <property name="poolSize" value="10"/>
+        <!-- 设置线程名称前缀为myScheduler- -->
+        <property name="threadNamePrefix" value="myScheduler-"/>
+        <!-- 设置线程池关闭时等待所有任务完成 -->
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+        <!-- 设置线程池关闭时等待的最长时间 -->
+        <property name="awaitTerminationSeconds" value="60"/>
+        <!-- 设定任务执行器中的线程池的相关参数 -->
+        <task:executor id="taskExecutor" pool-size="4-8" queue-capacity="32" rejection-policy="CALLER_RUNS"/>
+    </bean>
+
+    <!-- 使用`<task:scheduler/>`标签配置任务调度器，默认使用的是`ThreadPoolTaskScheduler`实现 -->
+    <task:scheduler id="taskScheduler" pool-size="10" />
+
+
+    <!-- 开启对@Async注解的支持 -->
+    <task:annotation-driven />
+</beans>

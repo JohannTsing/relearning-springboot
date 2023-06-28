@@ -321,7 +321,7 @@ public class AppConfig {
 6. `WorkManagerTaskExecutor`：一个基于Java EE WorkManager的TaskExecutor实现，可以在Java EE容器中使用。
 7. `TimerTaskExecutor`：一个基于Java Timer的TaskExecutor实现，可以在Java EE容器中使用。
 
-配置一个任务执行器：
+使用`<bean></bean>`标签配置一个任务执行器: 
 ```xml
 <!-- 配置一个线程池任务执行器 -->
 <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -336,7 +336,7 @@ public class AppConfig {
         <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
     </property>
     <!-- 线程名前缀，用于区分不同的线程池 -->
-    <property name="threadNamePrefix" value="timerTaskExecutor-"/>
+    <property name="threadNamePrefix" value="taskExecutor-"/>
     <!-- 是否等待所有任务执行完毕再关闭线程池 -->
     <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     <!-- 等待所有任务执行完毕的超时时间 -->
@@ -345,12 +345,9 @@ public class AppConfig {
 ```
 或者使用`<task:executor/>`标签进行配置
 ```xml
+<!--当使用`<task:executor/>`进行配置时，默认使用的是`ThreadPoolTaskExecutor`实现 -->
 <task:executor id="taskExecutor" pool-size="4-8" queue-capacity="32" rejection-policy="CALLER_RUNS"/>
-<!-- <task:executor id="taskExecutor" executor="myTaskExecutor_id" pool-size="4-8" queue-capacity="32" rejection-policy="CALLER_RUNS"/> -->
 ```
-当使用`<task:executor/>`进行配置时，默认使用的是`ThreadPoolTaskExecutor`实现。
-`<task:executor/>`是Spring提供的一个简化配置的方式，它会自动创建一个`ThreadPoolTaskExecutor`实例，并根据配置参数设置线程池的核心线程数、最大线程数、等待队列容量等属性。
-如果需要使用其他的`TaskExecutor`实现，可以通过`executor`属性指定具体的实现类。
 
 > 1. `核心线程数`和`最大线程数`的区别？
 > 
@@ -384,8 +381,8 @@ public class AppConfig {
 > * `DiscardOldestPolicy`：丢弃最老的一个请求，也就是即将被执行的一个任务，并尝试再次提交当前任务。
 > * `DiscardPolicy`：直接丢弃任务，不予任何处理也不抛出异常。
 
-在配置好了 TaskExecutor 后，可以直接调用它的 execute() 方法，传入一个 Runnable 对象；也
-可以在方法上使用 @Async 注解，这个方法可以是空返回值，也可以返回一个 Future ：
+在配置好了 TaskExecutor 后，可以直接调用它的 execute() 方法，传入一个 Runnable 对象；
+也 可以在方法上使用 @Async 注解，这个方法可以是空返回值，也可以返回一个 Future ：
 ```java
 @Service
 public class AsyncService {
@@ -408,7 +405,8 @@ public class AppConfig {
     // 配置其他bean
 }
 ```
-```xml
+或
+```
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
@@ -418,9 +416,13 @@ public class AppConfig {
                            http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- 配置其他bean -->
-
+    <!-- 自定义AsyncUncaught-ExceptionHandler -->
+    <bean id="exceptionHandler" class="com.foo.MyAsyncUncaughtExceptionHandler"/>
+    
     <!-- 开启对@Async注解的支持 -->
-    <task:annotation-driven />
+    <task:annotation-driven executor="myExecutor" exception-handler="exceptionHandler"/>
+
+    <task:executor id="myExecutor" pool-size="7-42" queue-capacity="11"/>
 </beans>
 ```
 
@@ -428,6 +430,41 @@ public class AppConfig {
 > 
 > 对于异步执行的方法，由于在触发时主线程就返回了，我们的代码在遇到异常时可能根本无法感知，而且抛出的异常也不会被捕获，
 > 因此最好我们能自己实现一个 AsyncUncaught-ExceptionHandler 对象来处理这些异常，最起码打印一个异常日志，方便问题排查。
+> - 示例: [自定义AsyncUncaught-ExceptionHandler](EnableAsync源代码.md)
+```java
+@Configuration
+@EnableAsync
+public class AppConfig implements AsyncConfigurer {
+
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(7);
+        executor.setMaxPoolSize(42);
+        executor.setQueueCapacity(11);
+        executor.setThreadNamePrefix("MyExecutor-");
+        executor.initialize();
+        return executor;
+    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new MyAsyncUncaughtExceptionHandler();
+    }
+}
+
+@Component
+public class MyAsyncUncaughtExceptionHandler implements AsyncUncaughtExceptionHandler {
+
+    @Override
+    public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
+        // 在这里可以自定义异常处理逻辑，比如打印日志或发送通知等
+        System.out.println("Async method: " + method.getName() + " threw an exception: " + throwable.getMessage());
+    }
+}
+```
+
+
 
 ##### 7.2.2, TaskScheduler 抽象
 Spring中的`TaskScheduler`是一个用于调度任务的接口，它可以在指定的时间间隔或者固定的时间点执行任务。
@@ -443,6 +480,21 @@ Spring中的`TaskScheduler`是一个用于调度任务的接口，它可以在�
 4. `TimerTaskScheduler`：基于`java.util.Timer`的`TaskScheduler`实现，可以在指定的时间间隔内执行任务。
 5. `CustomizableThreadFactory`：一个可定制的线程工厂，可以用于创建自定义的线程池。
 
-> `ThreadPoolTaskScheduler`和`ConcurrentTaskScheduler`是最常用的两种实现。
-> `ThreadPoolTaskScheduler`使用`ThreadPoolTaskExecutor`作为默认的`TaskExecutor`实现，
-> `ConcurrentTaskScheduler`使用`ScheduledExecutorService`作为默认的`TaskExecutor`实现。
+使用`<bean></bean>`标签配置一个调度任务:
+```xml
+<!-- 使用`<bean></bean>`标签配置一个任务调度器 -->
+<bean id="taskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+    <!-- 设置线程池大小为10 -->
+    <property name="poolSize" value="10"/>
+    <!-- 设置线程名称前缀为myScheduler- -->
+    <property name="threadNamePrefix" value="myScheduler-"/>
+    <!-- 设置线程池关闭时等待所有任务完成 -->
+    <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    <!-- 设置线程池关闭时等待的最长时间 -->
+    <property name="awaitTerminationSeconds" value="60"/>
+</bean>
+```
+或者使用`<task:scheduler/>` 来配置 TaskScheduler
+```xml
+<task:scheduler id="taskScheduler" pool-size="10" />
+```
