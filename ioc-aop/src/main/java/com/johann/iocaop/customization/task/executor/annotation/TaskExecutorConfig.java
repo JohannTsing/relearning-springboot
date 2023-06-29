@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.annotation.PreDestroy;
 import java.util.concurrent.Executor;
 
 /**
@@ -23,13 +24,15 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class TaskExecutorConfig implements AsyncConfigurer {
 
+    private ThreadPoolTaskExecutor executor;
+
     /**
      * 处理异步方法调用时要使用的Executor实例
      */
     @Override
     @Bean("clazz-taskExecutor")
     public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(7);
         executor.setMaxPoolSize(42);
         executor.setQueueCapacity(11);
@@ -46,4 +49,13 @@ public class TaskExecutorConfig implements AsyncConfigurer {
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new MyAsyncUncaughtExceptionHandler();
     }
+
+    /**
+     * 销毁线程池
+     */
+    @PreDestroy
+    public void destroy(){
+        executor.shutdown();
+    }
+
 }

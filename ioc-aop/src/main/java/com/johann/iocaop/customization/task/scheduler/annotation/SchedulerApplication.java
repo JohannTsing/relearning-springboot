@@ -1,5 +1,8 @@
 package com.johann.iocaop.customization.task.scheduler.annotation;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 /**
  * <p>
  *
@@ -8,4 +11,14 @@ package com.johann.iocaop.customization.task.scheduler.annotation;
  * @see
  **/
 public class SchedulerApplication {
+
+    private ApplicationContext applicationContext;
+
+    public SchedulerApplication(){
+        applicationContext = new AnnotationConfigApplicationContext(SchedulerConfig.class);
+    }
+
+    public static void main(String[] args) {
+        new SchedulerApplication();
+    }
 }

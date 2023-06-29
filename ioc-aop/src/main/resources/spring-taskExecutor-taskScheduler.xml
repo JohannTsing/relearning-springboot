@@ -9,8 +9,13 @@
     <!-- 配置其他bean -->
     <bean id="myAsyncUncaughtExceptionHandler"
           class="com.johann.iocaop.customization.task.executor.MyAsyncUncaughtExceptionHandler" lazy-init="true"/>
-
     <bean id="asyncXmlService" class="com.johann.iocaop.customization.task.executor.xml.AsyncXmlService" lazy-init="true"/>
+
+    <bean id="myBeanXmlTask" class="com.johann.iocaop.customization.task.scheduler.xml.MyBeanXmlTask"
+          lazy-init="true"/>
+    <!-- 如果使用@Scheduled注解创建一个定时任务，此时这个定时任务类不能被设置为懒加载，否则定时任务不会生效  -->
+    <bean id="myBeanAnnotationTask" class="com.johann.iocaop.customization.task.scheduler.xml.MyBeanAnnotationTask"
+          lazy-init="false"/>
 
     <!-- 使用`<bean></bean>`标签配置一个任务执行器 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -51,7 +56,13 @@
     <!-- 使用`<task:scheduler/>`标签配置任务调度器，默认使用的是`ThreadPoolTaskScheduler`实现 -->
     <task:scheduler id="taskScheduler_2" pool-size="10" />
 
+    <!-- 使用 <task:scheduled-tasks> 标签配置定时任务 -->
+    <task:scheduled-tasks scheduler="taskScheduler_2">
+        <task:scheduled ref="myBeanXmlTask" method="doTask" cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
+    
+    
     <!-- 开启对@Async注解的支持 -->
-    <task:annotation-driven executor="taskExecutor_2" scheduler="taskScheduler_2"
+    <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"
                             exception-handler="myAsyncUncaughtExceptionHandler"/>
 </beans>

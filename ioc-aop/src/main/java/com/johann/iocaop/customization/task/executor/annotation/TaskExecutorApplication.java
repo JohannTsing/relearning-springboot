@@ -11,7 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  **/
 public class TaskExecutorApplication {
 
-    private ApplicationContext applicationContext;
+    private AnnotationConfigApplicationContext applicationContext;
 
     public TaskExecutorApplication(){
         applicationContext = new AnnotationConfigApplicationContext(TaskExecutorConfig.class);
@@ -20,5 +20,7 @@ public class TaskExecutorApplication {
     public static void main(String[] args) {
         TaskExecutorApplication taskExecutorApplication = new TaskExecutorApplication();
         taskExecutorApplication.applicationContext.getBean(AsyncService.class).asyncSayHello();
+        System.out.println("异步任务执行完毕");
+        taskExecutorApplication.applicationContext.close();
     }
 }

@@ -314,10 +314,10 @@ public class AppConfig {
 在Spring中，`TaskExecutor`是一个接口，定义了执行异步任务的方法，可以用来发送邮件、短信、推送等。
 
 `TaskExecutor`的实现：
-1. `SimpleAsyncTaskExecutor`：一个简单的TaskExecutor实现，每次执行任务时都会创建一个新的线程来处理任务。
-2. `SyncTaskExecutor`：一个同步的TaskExecutor实现，每次执行任务时都会在当前线程中执行任务。
+1. `SimpleAsyncTaskExecutor`：一个简单的TaskExecutor实现，每次执行任务时都会创建一个新的线程来处理任务了，但不会重用线程。适用于执行时间较短的异步任务。。
+2. `SyncTaskExecutor`：一个同步的TaskExecutor实现，同步执行任务，不使用任何线程池，直接在调用线程中执行任务。
 3. `ConcurrentTaskExecutor`：一个基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列等参数。
-4. `ThreadPoolTaskExecutor`：一个更高级的基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列、线程池关闭时的等待时间等参数。
+4. `ThreadPoolTaskExecutor`：一个更高级的基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列、线程池关闭时的等待时间等参数，适用于执行时间较长的异步任务。
 5. `SimpleThreadPoolTaskExecutor`：一个简单的基于线程池的TaskExecutor实现，可以配置核心线程数、最大线程数、等待队列等参数。
 6. `WorkManagerTaskExecutor`：一个基于Java EE WorkManager的TaskExecutor实现，可以在Java EE容器中使用。
 7. `TimerTaskExecutor`：一个基于Java Timer的TaskExecutor实现，可以在Java EE容器中使用。
@@ -431,7 +431,7 @@ public class AppConfig {
 > 
 > 对于异步执行的方法，由于在触发时主线程就返回了，我们的代码在遇到异常时可能根本无法感知，而且抛出的异常也不会被捕获，
 > 因此最好我们能自己实现一个 AsyncUncaught-ExceptionHandler 对象来处理这些异常，最起码打印一个异常日志，方便问题排查。
-> - 示例: [自定义AsyncUncaught-ExceptionHandler](EnableAsync源代码.md)
+> - 示例: [自定义AsyncUncaught-ExceptionHandler](@EnableAsync源代码.md)
 
 ```java
 import org.springframework.context.annotation.Bean;
