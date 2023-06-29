@@ -13,7 +13,7 @@ import javax.annotation.PreDestroy;
 public class Hello {
 
     /**
-     * 虽然没有在配置文件中开启<context:annotation-config />，但是AnnotationConfigApplicationContext容器会开启这个注解驱动功能。
+     * 虽然没有在配置文件中开启<context:annotation-config />，但是 AnnotationConfigApplicationContext 容器会开启这个注解驱动功能。
      * 激活组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、@Resource、@PersistenceContext和@PersistenceUnit注解
      */
     @PostConstruct

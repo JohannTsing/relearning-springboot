@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  * @see
  **/
-@Component("helloBean")
+@Component("annotation-helloBean")
 public class Hello {
     public void sayHello() {
         System.out.println("Hello World! BeanConfigAnnotation");

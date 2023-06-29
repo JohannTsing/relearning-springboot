@@ -15,19 +15,13 @@ public class BeanConfigAnnotationApplication {
 
     private ApplicationContext applicationContext;
 
-    public static void main(String[] args) {
-        BeanConfigAnnotationApplication beanConfigAnnotationApplication = new BeanConfigAnnotationApplication();
-        Hello helloBean = beanConfigAnnotationApplication.applicationContext.getBean("helloBean", Hello.class);
-        beanConfigAnnotationApplication.sayHello(helloBean);
-    }
-
     public BeanConfigAnnotationApplication() {
         applicationContext = new ClassPathXmlApplicationContext("beans-config-annotation.xml");
     }
 
-    @Autowired(required = false)
-    @Qualifier("helloBean")
-    public void sayHello(Hello hello){
-        hello.sayHello();
+    public static void main(String[] args) {
+        BeanConfigAnnotationApplication beanConfigAnnotationApplication = new BeanConfigAnnotationApplication();
+        beanConfigAnnotationApplication.applicationContext.getBean(DoHelloService.class).sayHello();
     }
+
 }

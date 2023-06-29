@@ -67,7 +67,6 @@ public class AppConfig implements AsyncConfigurer {
     }
 }
 
-@Component
 public class MyAsyncUncaughtExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override

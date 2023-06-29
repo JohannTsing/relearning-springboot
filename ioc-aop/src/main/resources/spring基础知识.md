@@ -164,7 +164,7 @@ Java 进程在退出时，我们可以通过 Runtime.getRuntime().addShutdownHoo
 ConfigurableApplicationContext 接口扩展自 ApplicationContext，其中提供了一个 registerShut-downHook()。
 AbstractApplicationContext 类实现了该方法，正是调用了前面说到的 Runtime.get-Runtime().addShutdownHook()，并且在其内部调用了 doClose() 方法。
 
-设想在生产代码里有这么一种情况：一个Bean通过ApplicationContextAware注入了Application-Context，业务代码根据逻辑判断从
+设想在生产代码里有这么一种情况：一个Bean通过 ApplicationContextAware 注入了Application-Context，业务代码根据逻辑判断从
 ApplicationContext 中取出对应名称的 Bean，再进行调用；问题出现在应用程序关闭时，容器已经开始销毁 Bean 了，可是这段业务代码还在执行，
 仍在继续尝试从容器中获取 Bean，而且代码还没正确处理此处的异常……这该如何是好？
 
@@ -245,6 +245,7 @@ public class AppConfig {
 }
 
 ```
+
 @Value 注解，也能获取属性，获取不到时则返回默认值：
 ```java
 public class Hello {
@@ -267,7 +268,7 @@ public class Config {
 }
 ```
 如果使用 XML 进行配置，可以像下面这样：
-`<context:property-placeholder location="classpath:/META-INF/resources/app.properties" ignore-resource-not-found="false"  order="1"/>`
+`<context:property-placeholder location="classpath:/META-INF/resources/app.properties" ignore-resource-not-found="true"  order="1"/>`
 
 通常我们的预期是一定能找到需要的属性，但也有这个属性可有可无的情况，这时将注解的 ignoreResourceNotFound 或者 XML 文件的 ignore-resource-not-found 设置为 true 即可。
 如果存在多个配置，则可以通过 @Order 注解或 XML 文件的 order 属性来指定顺序。
@@ -275,12 +276,12 @@ public class Config {
 > Spring Framework是如何实现占位符解析的?
 > 
 > Spring Framework实现占位符解析的主要方式是通过PropertyPlaceholderConfigurer类。
-> PropertyPlaceholderConfigurer是一个BeanFactoryPostProcessor，它可以在BeanFactory加载BeanDefinition之前，对BeanDefinition中的占位符进行解析。
+> PropertyPlaceholderConfigurer 是一个 BeanFactoryPostProcessor，它可以在BeanFactory加载BeanDefinition之前，对BeanDefinition中的占位符进行解析。
 > 
 > 如果使用 <context:property-placeholder/>，Spring Framework 会自动注册一个 PropertySourcesPlaceholderConfigurera。
 > 如果是 Java 配置，则需要我们自己用 @Bean 来注册一个。
 > 
-> PropertyPlaceholderConfigurer可以从多个属性源中获取属性值，例如系统属性、环境变量、配置文件等。
+> PropertyPlaceholderConfigurer 可以从多个属性源中获取属性值，例如系统属性、环境变量、配置文件等。
 > 在解析占位符时，它会按照一定的优先级顺序查找属性值，直到找到第一个非空值为止。
 ```java
 @Configuration
@@ -431,18 +432,23 @@ public class AppConfig {
 > 对于异步执行的方法，由于在触发时主线程就返回了，我们的代码在遇到异常时可能根本无法感知，而且抛出的异常也不会被捕获，
 > 因此最好我们能自己实现一个 AsyncUncaught-ExceptionHandler 对象来处理这些异常，最起码打印一个异常日志，方便问题排查。
 > - 示例: [自定义AsyncUncaught-ExceptionHandler](EnableAsync源代码.md)
+
 ```java
+import org.springframework.context.annotation.Bean;
+
 @Configuration
 @EnableAsync
 public class AppConfig implements AsyncConfigurer {
 
     @Override
+    //@Bean("taskExecutor")
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(7);
         executor.setMaxPoolSize(42);
         executor.setQueueCapacity(11);
         executor.setThreadNamePrefix("MyExecutor-");
+        // 没有@Bean注解，需要手动初始化。且要注意 @Async 注解中的value值要与此处的beanName一致
         executor.initialize();
         return executor;
     }
@@ -453,7 +459,6 @@ public class AppConfig implements AsyncConfigurer {
     }
 }
 
-@Component
 public class MyAsyncUncaughtExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override
