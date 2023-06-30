@@ -36,7 +36,7 @@ public class TaskExecutorConfig implements AsyncConfigurer {
         executor.setCorePoolSize(7);
         executor.setMaxPoolSize(42);
         executor.setQueueCapacity(11);
-        executor.setThreadNamePrefix("MyExecutor-");
+        executor.setThreadNamePrefix("my-clazz-taskExecutor-");
         // 没有@Bean注解，需要手动初始化。且 要注意 @Async 注解中的value值
         // executor.initialize();
         return executor;
@@ -51,7 +51,8 @@ public class TaskExecutorConfig implements AsyncConfigurer {
     }
 
     /**
-     * 销毁线程池
+     * 在容器销毁之前，关闭线程池
+     * 即使没有在配置文件中启用<context:annotation-config />，AnnotationConfigApplicationContext容器也会启用注释驱动的功能
      */
     @PreDestroy
     public void destroy(){

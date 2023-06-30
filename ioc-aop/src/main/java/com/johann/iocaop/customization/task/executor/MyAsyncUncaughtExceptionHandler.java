@@ -20,8 +20,8 @@ public class MyAsyncUncaughtExceptionHandler implements AsyncUncaughtExceptionHa
      */
     @Override
     public void handleUncaughtException(Throwable ex, Method method, Object... params) {
-        System.out.println("MyAsyncUncaughtExceptionHandler捕获到异常，异常信息为："+ex.getMessage());
-        System.out.println("MyAsyncUncaughtExceptionHandler捕获到异常，方法名为："+method.getName());
+        System.out.printf("[当前线程名称: %s]: MyAsyncUncaughtExceptionHandler捕获到异常，异常信息为：%s\n",Thread.currentThread().getName(),ex.getMessage());
+        System.out.printf("[当前线程名称: %s]: MyAsyncUncaughtExceptionHandler捕获到异常，方法名为：%s\n",Thread.currentThread().getName(),method.getName());
         for (Object param : params) {
             System.out.println("MyAsyncUncaughtExceptionHandler捕获到异常，参数为："+param);
         }

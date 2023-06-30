@@ -103,7 +103,7 @@ For reference, the example above can be compared to the following `Spring XML` c
 
 The above `XML-based` and `JavaConfig-based` examples are equivalent except for the setting of the thread name prefix of the Executor; this is because the `<task:executor>` element does not expose such an attribute. This demonstrates how the `JavaConfig-based` approach allows for maximum configurability through direct access to actual componentry.
 
->   上述的基于XML和基于JavaConfig的示例是等效的，除了Executor的线程名称前缀的设置；这是因为`<task:executor>`元素没有暴露这样的属性。这展示了通过直接访问实际组件来实现最大可配置性的JavaConfig方法。
+>   上述的基于XML和基于JavaConfig的示例是等效的，除了Executor的线程名称前缀的设置；这是因为`<task:executor>`元素没有暴露这样的属性。这证明了基于JavaConfig的方法如何通过直接访问实际的组件来实现最大的可配置性。
 
 The mode attribute controls how advice is applied: If the mode is `AdviceMode.PROXY (the default)`, then the other attributes control the behavior of the proxying. Please note that proxy mode allows for interception of calls through the proxy only; local calls within the same class cannot get intercepted that way.
 

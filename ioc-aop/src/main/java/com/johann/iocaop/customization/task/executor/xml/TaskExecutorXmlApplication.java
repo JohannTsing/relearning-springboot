@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  **/
 public class TaskExecutorXmlApplication {
 
-    private ApplicationContext applicationContext;
+    private ClassPathXmlApplicationContext applicationContext;
 
     public TaskExecutorXmlApplication(){
         applicationContext = new ClassPathXmlApplicationContext("spring-taskExecutor-taskScheduler.xml");
@@ -20,5 +20,7 @@ public class TaskExecutorXmlApplication {
     public static void main(String[] args) {
         TaskExecutorXmlApplication taskExecutorXmlApplication = new TaskExecutorXmlApplication();
         taskExecutorXmlApplication.applicationContext.getBean(AsyncXmlService.class).asyncSayHello();
+        System.out.println("异步任务执行完毕");
+        taskExecutorXmlApplication.applicationContext.close();
     }
 }

@@ -12,13 +12,16 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  **/
 public class SchedulerApplication {
 
-    private ApplicationContext applicationContext;
+    private AnnotationConfigApplicationContext applicationContext;
 
     public SchedulerApplication(){
         applicationContext = new AnnotationConfigApplicationContext(SchedulerConfig.class);
     }
 
-    public static void main(String[] args) {
-        new SchedulerApplication();
+    public static void main(String[] args) throws InterruptedException {
+        SchedulerApplication schedulerApplication = new SchedulerApplication();
+        Thread.sleep(10000);
+        // 关闭容器
+        schedulerApplication.applicationContext.close();
     }
 }

@@ -11,6 +11,7 @@ public class MyBeanAnnotationTask {
 
     @Scheduled(cron = "0/8 * * * * ?")
     public void doTask(){
-        System.out.println("@Scheduled配置的定时任务执行中..."+System.currentTimeMillis());
+        String s = "@Scheduled配置的定时任务执行中..."+System.currentTimeMillis();
+        System.out.printf("[当前线程名称: %s]: %s\n",Thread.currentThread().getName(),s);
     }
 }

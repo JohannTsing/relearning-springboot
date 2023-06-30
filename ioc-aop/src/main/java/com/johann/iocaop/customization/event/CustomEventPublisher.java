@@ -20,8 +20,8 @@ public class CustomEventPublisher implements ApplicationEventPublisherAware {
      * 在Spring容器启动时，Spring会自动扫描 CustomEventPublisher类，并调用setApplicationEventPublisher方法，
      * 将ApplicationEventPublisher类型的Bean注入到CustomEventPublisher中。
      *
-     * 我们没有显式地定义ApplicationEventPublisher类型的Bean，但是Spring会自动为我们创建一个默认的
-     * ApplicationEventPublisher类型的Bean，并将其注入到所有实现了ApplicationEventPublisherAware接口的Bean中。
+     * 我们没有显式地定义 ApplicationEventPublisher 类型的Bean，但是Spring会自动为我们创建一个默认的
+     * ApplicationEventPublisher 类型的Bean，并将其注入到所有实现了 ApplicationEventPublisherAware 接口的Bean中。
      */
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {

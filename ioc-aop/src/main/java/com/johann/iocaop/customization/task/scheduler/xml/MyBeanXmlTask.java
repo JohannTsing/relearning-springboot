@@ -8,6 +8,7 @@ package com.johann.iocaop.customization.task.scheduler.xml;
 public class MyBeanXmlTask {
 
     public void doTask(){
-        System.out.println("<task:scheduled-tasks>配置的定时任务执行中..."+System.currentTimeMillis());
+        String s = "<task:scheduled-tasks>配置的定时任务执行中..."+System.currentTimeMillis();
+        System.out.printf("[当前线程名称: %s]: %s\n",Thread.currentThread().getName(),s);
     }
 }

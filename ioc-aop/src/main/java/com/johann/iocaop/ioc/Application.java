@@ -25,7 +25,7 @@ public class Application {
      * ApplicationContext 常见的几种实现
      * 1), ClassPathXmlApplicationContext：从 CLASSPATH 中加载 XML 文件来配置 ApplicationContext
      * 2), FileSystemXmlApplicationContext：从文件系统中加载 XML 文件来配置 ApplicationContext
-     * 3), AnnotationConfigApplicationContext：根据注解和 Java 类配置 ApplicationContext
+     * 3), AnnotationConfigApplicationContext：根据注解和 Java 类配置 ApplicationContext.（即使没有在配置文件中启用<context:annotation-config />，AnnotationConfigApplicationContext容器也会启用注释驱动的功能）
      * 4), WebXmlApplicationContext：从Web应用下的某个文件加载配置文件
      */
     private ApplicationContext applicationContext;

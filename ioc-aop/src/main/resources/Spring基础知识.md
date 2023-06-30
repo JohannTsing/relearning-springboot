@@ -313,6 +313,8 @@ public class AppConfig {
 ##### 7.2.1, TaskExecutor 抽象
 在Spring中，`TaskExecutor`是一个接口，定义了执行异步任务的方法，可以用来发送邮件、短信、推送等。
 
+- 示例：[TaskExecutor的使用](com/johann/iocaop/customization/task/executor)
+
 `TaskExecutor`的实现：
 1. `SimpleAsyncTaskExecutor`：一个简单的TaskExecutor实现，每次执行任务时都会创建一个新的线程来处理任务了，但不会重用线程。适用于执行时间较短的异步任务。。
 2. `SyncTaskExecutor`：一个同步的TaskExecutor实现，同步执行任务，不使用任何线程池，直接在调用线程中执行任务。
@@ -472,6 +474,9 @@ public class MyAsyncUncaughtExceptionHandler implements AsyncUncaughtExceptionHa
 
 
 ##### 7.2.2, TaskScheduler 抽象
+
+- 示例：[TaskScheduler的使用](com/johann/iocaop/customization/task/scheduler)
+- 
 Spring中的`TaskScheduler`是一个用于调度任务的接口，它可以在指定的时间间隔或者固定的时间点执行任务。
 
 `TaskScheduler`接口提供了多种方法来实现不同的调度策略，例如`schedule(Runnable task, Trigger trigger)`方法可以在指定的时间点执行任务，

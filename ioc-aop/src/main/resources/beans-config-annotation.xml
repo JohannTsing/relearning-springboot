@@ -38,9 +38,9 @@ xmlns:context: Spring 框架中用于配置上下文的命名空间。它允许�
 扫描类路径以查找带注释的组件，这些组件将自动注册为Spring bean。默认情况下，将检测到Spring提供的@Component、@Repository、
 @Service、@Controller、@RestController、@ControllerAdvice和@Configuration等构造型。
 
-注意：此标记包含着'annotation-config'标记的效果，激活组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、
+注意：此标记包含着`annotation-config`标记的效果，激活组件类中的@Required、@Autowired、@PostConstruct、@PreDestroy、
 @Resource、@PersistenceContext和@PersistenceUnit注解，这通常是自动检测组件所需的（没有外部配置）。
-关闭'annotation-config'属性以停用此默认行为，例如为了使用自定义BeanPostProcessor定义来处理这些注解。
+关闭`annotation-config`属性以停用此默认行为，例如为了使用自定义BeanPostProcessor定义来处理这些注解。
 
 注意：您可以在包路径中使用占位符，但只能针对系统属性进行解析（类似于资源路径）。组件扫描会导致新的bean定义被注册；
 Spring的 PropertySourcesPlaceholderConfigurer 将应用于这些bean定义，就像普通的bean定义一样，但它不会应用于组件扫描设置本身。

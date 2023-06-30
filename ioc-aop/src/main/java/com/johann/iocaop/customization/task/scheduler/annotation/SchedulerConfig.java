@@ -3,6 +3,7 @@ package com.johann.iocaop.customization.task.scheduler.annotation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -27,8 +28,8 @@ import org.springframework.scheduling.support.CronTrigger;
  * For example, this may be necessary when implementing Trigger-based tasks, which are not supported by the @Scheduled annotation.
  * <p>See {@link EnableScheduling @EnableScheduling} for detailed usage examples.
  *
- * 可选接口，由使用@EnableScheduling注解的@Configuration类实现。
- * 通常用于在执行定时任务时设置特定的TaskScheduler bean，或以编程方式注册定时任务，而不是使用@Scheduled注解的声明性方法。
+ * 可选接口，由使用 @EnableScheduling 注解的 @Configuration 类实现。
+ * 通常用于在执行定时任务时设置特定的 TaskScheduler bean，或以编程方式注册定时任务，而不是使用@Scheduled注解的声明性方法。
  * 例如，当实现基于触发器的任务时，这可能是必要的，因为@Scheduled注解不支持此类任务。
  * 有关详细使用示例，请参阅@EnableScheduling。
  */
@@ -43,7 +44,7 @@ public class SchedulerConfig implements SchedulingConfigurer {
         // taskRegistrar.setScheduler(Executors.newScheduledThreadPool(10));
         taskRegistrar.setScheduler(myScheduler());
         taskRegistrar.addTriggerTask(
-                ()-> System.out.println("执行动态定时任务"+System.currentTimeMillis()),
+                ()-> System.out.printf("[当前线程名称: %s]: %s\n",Thread.currentThread().getName(),"执行动态定时任务..."+System.currentTimeMillis()),
                 triggerContext -> {
                     // 定时任务的触发规则
                     CronTrigger cronTrigger = new CronTrigger("0/8 * * * * ?");
@@ -51,11 +52,17 @@ public class SchedulerConfig implements SchedulingConfigurer {
                 });
     }
 
-    @Bean
-    public TaskScheduler myScheduler(){
+    /**
+     * 创建一个任务调度器
+     * (destroyMethod = "shutdown")确保了当Spring应用上下文本身关闭时，任务执行器被正确关闭.
+     * @return
+     */
+    @Bean(name = "clazz-myScheduler",destroyMethod = "shutdown")
+    public ThreadPoolTaskScheduler myScheduler(){
         // 创建一个任务调度器
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(10);
+        taskScheduler.setThreadNamePrefix("my-clazz-myScheduler-");
         return taskScheduler;
     }
 

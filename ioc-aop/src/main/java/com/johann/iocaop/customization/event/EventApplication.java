@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * 自动扫描路径下的所有带以下注解的组件（如果没有指定扫描的基础包路径或者类，默认就从该配置类的包开始扫描），将其注册到Spring容器中。
  * 默认情况下，将检测到Spring提供的@Component、@Repository、@Service、@Controller、@RestController、@ControllerAdvice和@Configuration等注解。
  *
- * <context:component-scan />元素默认隐含了<context:annotation-config />效果。但是，这个注释没有。
+ * <context:component-scan />元素默认隐含了<context:annotation-config />效果。但是，@ComponentScan 这个注解没有。
  */
 @ComponentScan(basePackages = "com.johann.iocaop.customization.event")
 @Log4j2

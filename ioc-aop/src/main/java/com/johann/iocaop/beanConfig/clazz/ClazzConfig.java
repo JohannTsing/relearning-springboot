@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 /**
  * @ComponentScan 注解指定了类扫描的包名，作用与 <context:component-scan /> 类似。
  * 如果 @ComponentScan 没有指定扫描的基础包路径或者类，默认就从该配置类的包开始扫描。
- * 请注意: <context:component-scan />元素默认隐含了<context:annotation-config />效果。
+ * 请注意: <context:component-scan />元素默认隐含了<context:annotation-config />效果，但是 @ComponentScan 注解没有这个效果。
  * 这是因为在几乎所有情况下，当使用@ComponentScan时，都会假设默认的注释配置处理（例如处理@Autowired和friends）。
- * 此外，当使用AnnotationConfigApplicationContext时，注释配置处理器始终是注册的，这意味着在@ComponentScan级别禁用它们的任何尝试都将被忽略。
+ * 此外，当使用 AnnotationConfigApplicationContext 时，注释配置处理器始终是注册的，这意味着在 @ComponentScan 级别禁用它们的任何尝试都将被忽略。
  */
 @ComponentScan(basePackages = "com.johann.iocaop.beanConfig.clazz"
         // 在 @ComponentScan 中，includeFilters 和 excludeFilters 可以用来指定包含和排除的组件

@@ -21,6 +21,7 @@ public class TaskExecutorApplication {
         TaskExecutorApplication taskExecutorApplication = new TaskExecutorApplication();
         taskExecutorApplication.applicationContext.getBean(AsyncService.class).asyncSayHello();
         System.out.println("异步任务执行完毕");
+        // 关闭容器
         taskExecutorApplication.applicationContext.close();
     }
 }
