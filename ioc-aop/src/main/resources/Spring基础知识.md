@@ -530,3 +530,46 @@ Spring框架提供了两种类型的AOP代理：基于接口的代理和基于�
 * 基于类的代理使用CGLIB库，它能够代理没有实现接口的类。(在 Spring Framework 中，为了避免类冲突，Spring 团队直接在编译时将 CGLIB 打包进了框架里，同时调整了包名。)
 
 #### 8.3, 基于@AspectJ 的配置
+1. 在pom文件中引入`spring-aspects`依赖。
+2. 使用`@EnableAspectJAutoProxy` 来开启`@AspectJ` 注解支持
+```java
+@Configuration
+// 开启@AspectJ 注解支持。启用CGLIB风格的 "子类 "代理，而不是默认的基于接口的JDK代理方法
+@EnableAspectJAutoProxy(proxyTargetClass=true)
+public class AppConfig {
+
+  @Bean
+  public FooService fooService() {
+      return new FooService();
+  }
+
+  @Bean
+  public MyAspect myAspect() {
+      return new MyAspect();
+  }
+}
+```
+3. 以使用 `@Aspect` 注解来声明切面
+```java
+@Aspect
+public class MyAspect {
+
+  @Before("execution(* FooService+.*(..))")
+  public void advice() {
+      // advise FooService methods as appropriate
+  }
+}
+```
+> 注意：
+> (1) 添加 @Aspect 注解只是告诉 Spring“这个类是切面”，但并没有把它声明为 Bean，因此需要我们手动进行配置，例如添加 @Component 注解，或者在 Java 配置类中进行声明。
+> (2) Spring Framework 会对带有 @Aspect 注解的类做特殊对待，因为其本身就是一个切面，所以不会被别的切面自动拦截
+
+#### 8.3.1, 声明切入点
+注解方式的切入点声明由两部分组成 —— 切入点表达式和切入点方法签名。前者用来描述要匹配的连接点，后者可以用来引用切入点，方便切入点的复用。
+
+- [@Pointcut切入点标识符说明](SpringAop_@Pointcut切入点标识符说明.md)
+
+#### 8.3.2, 声明通知
+
+
+
