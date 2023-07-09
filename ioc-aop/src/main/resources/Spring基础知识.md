@@ -73,6 +73,9 @@ Spring框架提供了三种自动装配的方式，分别是`byName`、`byType`�
 - 示例: [自动装配xml配置](beans-dependency-autowire-injection.xml)
 
 ### 4, Bean的配置方式
+Spring框架支持三种配置方式，分别是基于XML的配置方式、基于注解的配置方式和基于Java的配置方式。
+
+- [Bean的配置方式](com/johann/iocaop/beanConfig)
 
 #### 4.1, 基于XML的配置方式
 
@@ -81,16 +84,43 @@ Spring框架提供了三种自动装配的方式，分别是`byName`、`byType`�
 #### 4.3, 基于Java的配置方式
 
 ### 5, Bean的作用域(Scope)
+1. singleton：在 IOC 容器中，对应的 Bean 只有一个实例，所有对它的引用都指向同一个对象。这种作用域非常适合对于无状态的 Bean，比如工具类或服务类。
+2. prototype：每次请求都会创建一个新的 Bean 实例，适合对于需要维护状态的 Bean。
+3. request：在 Web 应用中，为每个 HTTP 请求创建一个 Bean 实例。适合在一个请求中需要维护状态的场景，如跟踪用户行为信息。
+4. session：在 Web 应用中，为每个 HTTP 会话创建一个 Bean 实例。适合需要在多个请求之间维护状态的场景，如用户会话。
+5. application：在整个 Web 应用期间，创建一个 Bean 实例。适合存储全局的配置数据等。
+6. websocket：在每个 WebSocket 会话中创建一个 Bean 实例。适合 WebSocket 通信场景。
 
 #### 5.1, 单例(Singleton)
+* 适用场景：当一个Bean的实例在整个应用程序中是共享的，并且需要在多个地方被访问时，可以使用Singleton作用域。这样可以确保所有的访问都使用同一个实例，避免了重复创建和资源浪费。
+* 示例：数据库连接池、日志管理器、缓存管理器等。
+* 注意：Singleton作用域是Spring容器默认的作用域，如果没有特殊指定，Spring容器创建的Bean都是Singleton作用域的。
 
 #### 5.2, 原型(Prototype)
+* 适用场景：当一个Bean的实例需要在每次请求时都是独立的，不共享状态时，可以使用Prototype作用域。每次请求都会创建一个新的实例，确保每个实例都是独立的。
+* 示例：HTTP请求处理器、线程池、消息处理器等。
+* 注意：Prototype作用域的Bean不受Spring容器管理，Spring容器不会对这种类型的Bean进行初始化和销毁操作，需要手动管理Bean的生命周期。
 
 #### 5.3, 请求(Request)
+* 适用场景：在Web应用程序中，当一个Bean的实例需要在每个HTTP请求中都是独立的，不共享状态时，可以使用Request作用域。每个请求都会创建一个新的实例，确保每个请求都有自己的实例。
+* 示例：用户请求处理器、表单处理器、请求拦截器等。
+* 注意：Request作用域只能在Web应用程序中使用，需要在web.xml中配置Spring的监听器org.springframework.web.context.request.RequestContextListener。
 
 #### 5.4, 会话(Session)
+* 适用场景：在Web应用程序中，当一个Bean的实例需要在每个用户会话中都是独立的，不共享状态时，可以使用Session作用域。每个用户会话都会创建一个新的实例，确保每个会话都有自己的实例。
+* 示例：用户登录信息、购物车、用户偏好设置等。
+* 注意：Session作用域只能在Web应用程序中使用，需要在web.xml中配置Spring的监听器org.springframework.web.context.request.RequestContextListener。
 
-#### 5.5, 全局会话(Global Session)
+#### 5.5, 应用程序(Application)
+* 适用场景：当一个Bean的实例需要在整个应用程序中共享，并且需要在多个用户会话之间共享状态时，可以使用Application作用域。所有用户会话都共享同一个实例。
+* 示例：应用程序配置信息、全局缓存、全局计数器等。
+* 注意：Application作用域只能在Web应用程序中使用，需要在web.xml中配置Spring的监听器org.springframework.web.context.request.RequestContextListener。
+
+#### 5.6, WebSocket
+* 适用场景：当一个Bean的实例需要在WebSocket会话中共享，并且需要在多个WebSocket连接之间共享状态时，可以使用WebSocket作用域。所有WebSocket连接共享同一个实例。
+* 示例：WebSocket会话管理器、在线聊天室、实时通知系统等。
+* 注意：WebSocket作用域只能在Web应用程序中使用，需要在web.xml中配置Spring的监听器org.springframework.web.context.request.RequestContextListener。
+
 
 ### 6, 定制容器与 Bean 的行为
 
@@ -570,6 +600,126 @@ public class MyAspect {
 - [@Pointcut切入点标识符说明](SpringAop_@Pointcut切入点标识符说明.md)
 
 #### 8.3.2, 声明通知
+##### 1. 前置通知
+`@Before` 注解可以用来声明一个前置通知，注解中可以引用事先定义好的切入点，也可以直接传入一个切入点表达式，在被拦截到的方法开始执行前，会先执行通知中的代码。
 
+前置通知的方法没有返回值，因为它在被拦截的方法前执行，就算有返回值也没地方使用。
+但是它可以对被拦截方法的参数进行加工，通过 args 这个 PCD 能明确参数，并将其绑定到前置通知方法的参数上。
+```java
+@Aspect
+@Order(1) //@Order注解用来指定切面的优先级，值越小优先级越高
+public class BeforeAspect {
+    @Before("learning.spring.helloworld.HelloPointcut.sayHello()")
+    public void before() {
+        System.out.println("Before Advice");
+    }
 
+    // 同一个切面类里还可以有其他通知方法
+    // 这就是一个普通的Java类，没有太多限制
+    @Before("learning.spring.helloworld.HelloPointcut.sayHello() && args(count)")
+    public void before(AtomicInteger count) {
+        // 可以对count进行加工
+    }
+}
+```
+##### 2. 后置通知
+在方法执行后，可能正常返回，也可能抛出了异常。
+1. 如果想要拦截正常返回的调用，可以使用`@AfterReturing`注解;
+2. 如果想要拦截抛出异常的调用，可以使用 `@AfterThrowing` 注解;
+3. 如果不关注执行是否成功，只是想在方法结束后做些动作，可以使用 `@After` 注解。
 
+```java
+@Aspect
+public class AfterAspect {
+    // 拦截正常返回的调用
+    @AfterReturning("execution(public * say(..))")
+    public void after() {}
+    
+    // printWords() 方法的参数 words 就是被拦截方法的返回值，而且此处限定了该通知只拦截返回值是 String 类型的调用。
+    // 需要提醒的是，returning 中给定的名字必须与方法的参数名保持一致。
+    @AfterReturning(pointcut = "execution(public * say(..))", returning = "words")
+    public void printWords(String words) {
+        // 可以对words进行加工
+        words = "after returning: " + words;
+    }
+
+    //拦截抛出异常的调用
+    @AfterThrowing("execution(public * say(..))")
+    public void afterThrow() {}
+    
+    @AfterThrowing(pointcut = "execution(public * say(..))", throwing = "exception")
+    public void printException(Exception exception) {
+        // 可以对exception进行加工
+        System.out.println("after throwing: " + exception.getMessage());
+    }
+    
+    // 不关注执行是否成功，只是想在方法结束后做些动作
+    // 它获取不到返回值或异常对象，所以一般只被用来做一些资源清理的工作。
+    @After("execution(public * say(..))")
+    public void afterAdvice() {
+        System.out.println("after advice");
+    }
+}
+```
+##### 3. 环绕通知
+`@Around` 注解可以用来声明一个环绕通知，环绕通知是功能最为强大的通知类型，不仅可以在方法执行前后加入自己的逻辑，甚至可以完全替换方法本身的逻辑，或者替换调用参数。
+它的第一个参数必须是 ProceedingJoinPoint 类型的，方法的返回类型是被拦截方法的返回类型，或者直接用 Object 类型。
+```java
+@Aspect
+public class TimerAspect {
+     @Around("execution(public * say(..))")
+     public Object recordTime(ProceedingJoinPoint pjp) throws Throwable {
+        long start = System.currentTimeMillis();
+         try {
+            return pjp.proceed();
+         } finally {
+             long end = System.currentTimeMillis();
+             System.out.println("Total time: " + (end - start) + "ms");
+         }
+     }
+}
+```
+##### 4. 引入通知
+我们可以为 Bean 添加新的接口，并为新增的方法提供默认实现，这种操作被称为引入（Introduction）。
+
+在切面类里声明一个成员属性，该属性的类型就是要引入的类型，在上面添加 @DeclareParents 注解就可以声明引入
+```java
+@Component
+@Aspect
+@Log4j2
+public class SecondAspect {
+
+    /**
+     * 引入新的接口
+     * 引入（Introduction）是一种特殊的通知，它为现有的类添加新的方法或属性。Spring允许我们向现有的类添加新的接口（而不是实现）。
+     */
+    @DeclareParents(value = "com.johann.iocaop.aop.annotation.MyService+",defaultImpl = NewInterfaceImpl.class)
+    private NewInterface newInterface;
+    private int counter = 0;
+
+    /**
+     * 前置通知
+     * 通过execution表达式指定切入点, 通过args指定参数,对参数进行操作
+     */
+    @Before("execution(public !static * do*(..)) && args(words)")
+    public void addCounter(StringBuffer words){
+        log.info(this.getClass().getName()+": addCounter前置通知, args: "+words);
+        words.append("[" + ++counter + "]");
+    }
+
+    /**
+     * 环绕通知
+     * 通过execution表达式指定切入点, 通过this指定目标对象,对目标对象进行操作
+     */
+    @Around("execution(public * doSomething(..)) && this(newInterface)")
+    public String addSay(ProceedingJoinPoint pjp,NewInterface newInterface) throws Throwable {
+        long start = System.currentTimeMillis();
+        try {
+            return pjp.proceed() + newInterface.todoNewSomething();
+        } finally {
+            long end = System.currentTimeMillis();
+            System.out.println("Total time: " + (end - start) + "ms");
+        }
+    }
+}
+```

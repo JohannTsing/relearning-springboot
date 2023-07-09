@@ -12,8 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * <p>
- *
+ * AOP单元测试
  * @author Johann
  * @version 1.0
  * @see

@@ -13,9 +13,20 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class DoHelloService {
+
+    // 不建议使用字段注入
+//    @Autowired(required = false)
+//    @Qualifier("annotation-helloBean")
+//    Hello hello;
+
+    private Hello hello;
+
     @Autowired(required = false)
-    @Qualifier("annotation-helloBean")
-    Hello hello;
+    public DoHelloService(Hello hello) {
+        this.hello = hello;
+        System.out.println("DoHelloService容器启动初始化。。。");
+    }
+
 
     public void sayHello(){
         hello.sayHello();
