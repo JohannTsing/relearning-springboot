@@ -32,3 +32,28 @@ Spring Boot 的起步依赖命名规则如下：
 > 假设 B 依赖于 C，而 A 又依赖于 B，那么 A 无须明确声明对 C 的依赖，而是通过 B 依赖于 C
 
 ### 2, 自动配置
+Spring Boot 可以根据 CLASSPATH、配置项等条件自动进行常规配置，省去了我们自己动手把一模一样的配置复制来复制去的麻烦。
+如果它的配置不是我们想要的，再做些手动配置就好了。
+
+在SpringBoot中，使用`@EnableAutoConfiguration`注解来开启自动配置，它的源码如下：
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+    String ENABLED_OVERRIDE_PROPERTY = "spring.boot.enableautoconfiguration";
+
+    Class<?>[] exclude() default {};
+
+    String[] excludeName() default {};
+}
+```
+`@EnableAutoConfiguration`注解的核心是`@Import(AutoConfigurationImportSelector.class)`，它的作用就是从`META-INF/spring.factories`配置文件中读取`EnableAutoConfiguration`指定的配置类，然后将它们添加到 Spring 的容器中。
+
+`@SpringBootApplication` 注解上添加了`@EnableAutoConfiguration`注解，所以它也能开启自动配置功能。 
+这两个注解上都有 `exclude` 属性，我们可以在其中排除一些不想启用的自动配置类。
+
+如果不想启用自动配置功能，也可以在配置文件中配置 `spring.boot.enableautoconfiguration=false`，关闭该功能。

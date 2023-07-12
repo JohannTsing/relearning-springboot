@@ -1,6 +1,7 @@
 package com.johann.iocaop.aop.annotation;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  * @see
  **/
-@Component("msi")
+@Service("msi")
 public class MyServiceImpl implements MyService{
     @Override
     public String doSomething(StringBuffer words) {

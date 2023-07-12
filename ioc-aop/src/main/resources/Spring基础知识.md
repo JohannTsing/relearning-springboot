@@ -305,20 +305,19 @@ public class Config {
 
 > Spring Framework是如何实现占位符解析的?
 > 
-> Spring Framework实现占位符解析的主要方式是通过PropertyPlaceholderConfigurer类。
+> Spring Framework实现占位符解析的主要方式是通过 PropertyPlaceholderConfigurer（3.1之后是PropertySourcesPlaceholderConfigurera） 类。
 > PropertyPlaceholderConfigurer 是一个 BeanFactoryPostProcessor，它可以在BeanFactory加载BeanDefinition之前，对BeanDefinition中的占位符进行解析。
 > 
 > 如果使用 <context:property-placeholder/>，Spring Framework 会自动注册一个 PropertySourcesPlaceholderConfigurera。
 > 如果是 Java 配置，则需要我们自己用 @Bean 来注册一个。
 > 
-> PropertyPlaceholderConfigurer 可以从多个属性源中获取属性值，例如系统属性、环境变量、配置文件等。
+> PropertySourcesPlaceholderConfigurera 可以从多个属性源中获取属性值，例如系统属性、环境变量、配置文件等。
 > 在解析占位符时，它会按照一定的优先级顺序查找属性值，直到找到第一个非空值为止。
 ```java
 @Configuration
-@PropertySource("classpath:application.properties")
-public class AppConfig {
+public class AppConfig1 {
  
-    // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
+    // 注意，这里的 PropertyPlaceholderConfigurer 需要使用 static
     @Bean
     public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
         PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
@@ -336,7 +335,59 @@ public class AppConfig {
         return dataSource;
     }
 }
-``` 
+
+@Configuration
+@PropertySource("classpath:application.properties")
+@PropertySource("classpath:config.properties")
+public class AppConfig2 {
+
+    // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
+    @Bean
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        return configurer;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("${db.driver}");
+        return dataSource;
+    }
+}
+
+@Configuration
+public class AppConfig3 {
+
+    // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
+    @Bean
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        Resource[] resources = new ClassPathResource[ ]
+                { new ClassPathResource("application.properties")
+                    , new ClassPathResource("config.properties")
+                };
+        configurer.setLocations( resources );
+        return configurer;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("${db.driver}");
+        return dataSource;
+    }
+}
+```
+
+| 特性    | PropertySourcesPlaceholderConfigurer | PropertyPlaceholderConfigurer |
+|-------|--------------------------------------|-------------------------------|
+| 向后兼容性 | 与Spring 3.0及更早版本不兼容            | 兼容Spring 3.0及更早版本                 |
+| 灵活性   |  更灵活，可使用环境和属性源机制             | 灵活性较差，仅支持属性文件                 |
+| 特征    |  支持属性文件、环境变量、系统属性和其他属性源   | 支持属性文件和系统属性                   |
+| 用途    |  在Spring 3.1应用程序中默认使用            | 在Spring 3.0及更早版本的应用程序中默认使用 |
 
 #### 7.2, 任务抽象
 
@@ -460,9 +511,10 @@ public class AppConfig {
 ```
 
 > 注意：
-> 
+>
 > 对于异步执行的方法，由于在触发时主线程就返回了，我们的代码在遇到异常时可能根本无法感知，而且抛出的异常也不会被捕获，
 > 因此最好我们能自己实现一个 AsyncUncaught-ExceptionHandler 对象来处理这些异常，最起码打印一个异常日志，方便问题排查。
+>
 > - 示例: [自定义AsyncUncaught-ExceptionHandler](@EnableAsync源代码.md)
 
 ```java
