@@ -219,23 +219,23 @@ Profile抽象是Spring框架中的一个接口，它定义了一些方法，用�
 @Configuration
 @Profile("dev")
 public class DevConfig {
- @Bean
- public Hello hello() {
- Hello hello = new Hello();
- hello.setName("dev");
- return hello;
- }
+     @Bean
+     public Hello hello() {
+         Hello hello = new Hello();
+         hello.setName("dev");
+         return hello;
+     }
 }
 
 @Configuration
 @Profile("test")
 public class TestConfig {
- @Bean
- public Hello hello() {
- Hello hello = new Hello();
- hello.setName("test");
- return hello;
- }
+     @Bean
+     public Hello hello() {
+         Hello hello = new Hello();
+         hello.setName("test");
+         return hello;
+     }
 }
 ```
 
@@ -336,13 +336,13 @@ public class AppConfig1 {
     }
 }
 
+// java 8 以后允许可重复的注解
 @Configuration
 @PropertySource("classpath:application.properties")
 @PropertySource("classpath:config.properties")
 public class AppConfig2 {
 
     // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
-    @Bean
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
@@ -361,7 +361,6 @@ public class AppConfig2 {
 public class AppConfig3 {
 
     // 注意，这里的 PropertySourcesPlaceholderConfigurer 需要使用 static
-    @Bean
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @see
  **/
-// JUnit 5 可以通过 @ExtendWith 注解来添加扩展，@ExtendWith(SpringExtension.class) 就添加了 Spring 的测试支持，
+// JUnit 5 可以通过 @ExtendWith 注解来添加扩展（@RunWith注解用于JUnit 4），@ExtendWith(SpringExtension.class) 就添加了 Spring 的测试支持，
 // @ContextConfiguration 注解指定了用来初始化 Spring 容器的配置类或配置文件。
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {AnnotationConfig.class})

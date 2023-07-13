@@ -56,7 +56,7 @@ In the example above, `<context:annotation-config/>` is required in order to ena
 
 >   在上面的例子中，`<context:annotation-config/>`是必需的，以便启用ConfigurationClassPostProcessor和其他与注释相关的后置处理器，方便处理@Configuration类。
 
-### 通过组件扫描）
+### 通过组件扫描
 
 >   Via component scanning
 
@@ -95,7 +95,7 @@ See the `@ComponentScan` javadocs for details.
 
 >   详情见@ComponentScan javadocs。
 
-## 使用外部化的值）
+## 使用外部化的值
 
 >   Working with externalized values
 
@@ -185,7 +185,7 @@ See the section below on composing `@Configuration` classes with Spring XML usin
 
 >   Composing `@Configuration` classes
 
-### 使用@Import）
+### 使用@Import
 
 >   With the `@Import` annotation
 
@@ -227,7 +227,7 @@ Now both AppConfig and the imported DatabaseConfig can be bootstrapped by regist
 
 ```java new AnnotationConfigApplicationContext(AppConfig.class);```
 
-### 使用@Profile）
+### 使用@Profile
 
 >   With the @Profile annotation
 
