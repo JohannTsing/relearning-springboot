@@ -9,6 +9,32 @@ Note that contrary to @Value, SpEL expressions are not evaluated since property 
 >   绑定可以通过调用注解类上的setters来执行，或者，如果使用了 @ConstructorBinding，则通过绑定到构造函数参数来执行。
 >   请注意，与 @Value 相反，SpEL 表达式不会被求值，因为属性值是外部化的。
 
+
+将 @ConfigurationProperties 注解的 Bean 注册到 Spring 容器中，有以下三种方式：
+1. 可以在其他的配置类中添加这样的注解 @EnableConfigurationProperties(DataSourceProperties.class)，将绑定后的 DataSourceProperties 注册为 Bean。
+通过这种方式注册的Bean，它的Bean名称是【属性前缀 - 配置类的全限定类名】。
+2. 也可以直接用 @Component 注解将 DataSourceProperties 注册为 Bean。
+3. 将@ConfigurationProperties 注解加到带有 @Bean 注解的方法上，此时就能为方法返回的 Bean 对象绑定上下文中的属性了。
+```java
+/**
+ * 通过在其他的配置类中添加 @EnableConfigurationProperties(DataSourceProperties.class) 注解
+ * 将绑定后的 DataSourceProperties 注册为 Bean
+ * 此时，注册Bean名称是：【属性前缀 - 配置类的全限定类名】，即“spring.datasource-org.springframework.boot.autoconfigure.jdbc.DataSourceProperties”
+ */
+//@Component
+@ConfigurationProperties(prefix = "spring.datasource")
+public class DataSourceProperties implements BeanClassLoaderAware, InitializingBean {
+    private ClassLoader classLoader;
+    private String name;
+    private boolean generateUniqueName = true;
+    private Class<? extends DataSource> type;
+    private String driverClassName;
+    private String url;
+    // 以下省略
+}
+```
+
+`@ConfigurationProperties`源代码：
 ```java
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -87,7 +113,6 @@ public @interface ConstructorBinding {
 Enable support for @ConfigurationProperties annotated beans. @ConfigurationProperties beans can be registered in the standard way (for example using @Bean methods) or, for convenience, can be specified directly on this annotation.
 
 >   启用对 @ConfigurationProperties 注解 Bean 的支持。@ConfigurationProperties Beans 可以以标准方式注册（例如使用 @Bean 方法），或者为了方便起见，可以直接在此注解中指定。
-
 ```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

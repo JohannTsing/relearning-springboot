@@ -53,6 +53,10 @@ public @interface EnableAutoConfiguration {
 ```
 `@EnableAutoConfiguration`注解的核心是`@Import(AutoConfigurationImportSelector.class)`，它的作用就是从`META-INF/spring.factories`配置文件中读取`EnableAutoConfiguration`指定的配置类，然后将它们添加到 Spring 的容器中。
 
+> 从 Spring Boot 2.7 开始，AutoConfigurationImportSelector 不再从 /META-INF/spring.factories 加载自动配置类，而
+是开始使用新的 /META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports 文件，直接
+在里面添加自动配置类的全限定类名即可。
+
 `@SpringBootApplication` 注解上添加了`@EnableAutoConfiguration`注解，所以它也能开启自动配置功能。 
 这两个注解上都有 `exclude` 属性，我们可以在其中排除一些不想启用的自动配置类。
 
