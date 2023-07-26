@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="simpleBean" class="com.johann.iocaop.circularDependency.noDependency_aop.SimpleBean" />
+
+    <bean id="myAspect" class="com.johann.iocaop.circularDependency.noDependency_aop.SimpleAspect" />
+
+    <aop:config>
+        <aop:aspect ref="myAspect">
+            <aop:pointcut id="pointcut" expression="execution(* com.johann.iocaop.circularDependency.noDependency_aop.*.*(..))"/>
+            <aop:before method="before" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

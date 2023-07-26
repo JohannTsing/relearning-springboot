@@ -129,17 +129,17 @@ Spring框架支持三种配置方式，分别是基于XML的配置方式、基�
 Spring中的Bean生命周期包括以下阶段：
 1. 实例化：当Spring容器启动时，它会根据配置文件或注解创建Bean的实例。
 2. 属性赋值【注入依赖】：在实例化后，Spring容器会将Bean的属性值注入到Bean实例中。
-3. 初始化：在属性赋值完成后，Spring容器会调用Bean的初始化方法，可以通过实现 InitializingBean 接口或在配置文件中指定init-method来定义初始化方法。
+3. 初始化：在属性赋值完成后，Spring容器会调用Bean的初始化方法，可以通过实现 `InitializingBean` 接口或在配置文件中指定`init-method`来定义初始化方法。
 4. 使用：初始化完成后，Bean可以被应用程序使用。
-5. 销毁：当Spring容器关闭时，它会调用Bean的销毁方法，可以通过实现DisposableBean接口或在配置文件中指定destroy-method来定义销毁方法。
+5. 销毁：当Spring容器关闭时，它会调用Bean的销毁方法，可以通过实现`DisposableBean`接口或在配置文件中指定`destroy-method`来定义销毁方法。
 
 总的来说，Bean的生命周期可以概括为实例化、属性赋值【注入依赖】、初始化、使用和销毁。在这个过程中，Spring容器会负责管理Bean的生命周期，确保Bean在应用程序中正确地被创建、初始化、使用和销毁。
 
 #### 6.2, Bean的初始化方法和销毁方法
 可以通过以下三种方式，定制Bean初始化和销毁方法，它们的优先级顺序如序号所示
-1. @PostConstruct和@PreDestroy注解【JSR-250】；
-2. 实现InitializingBean和DisposableBean接口；
-3. 在<bean></bean>中指定init-method和destroy-method属性。（@Bean中配置的initMethod或destroyMethod）
+1. `@PostConstruct`和`@PreDestroy`注解【JSR-250】；
+2. 实现`InitializingBean`和`DisposableBean`接口；
+3. 在<bean></bean>中指定`init-method`和`destroy-method`属性。（@Bean中配置的`initMethod`或`destroyMethod`）
 
 - 示例: [Bean的初始化和销毁方法](beans-lifecycle.xml)
 
