@@ -1,4 +1,4 @@
-```java
+```text
 @CallerSensitive
 public static Object newProxyInstance(ClassLoader loader,
                                       Class<?>[] interfaces,
@@ -25,7 +25,7 @@ public static Object newProxyInstance(ClassLoader loader,
 * 接下来，调用 getProxyConstructor 方法查找或生成指定代理类及其构造函数。
 * 最后，调用 newProxyInstance 方法创建代理对象，并返回。
 
-```java
+```text
 /**
  * 返回一个代理类的构造器对象，该对象需要一个InvocationHandler类型的单一参数，给定一个类加载器和一个接口数组。
  * 返回的构造函数将已经设置了可访问的标志。
@@ -74,7 +74,7 @@ private static Constructor<?> getProxyConstructor(Class<?> caller,
   * 将接口数组转换为列表 intfs。
   * 从 proxyCache 缓存中获取代理类的构造函数，如果缓存中不存在，则使用 ProxyBuilder 类生成代理类并缓存。
 
-```java
+```text
 private static void checkProxyAccess(Class<?> caller,
                                      ClassLoader loader,
                                      Class<?> ... interfaces) {
@@ -95,7 +95,7 @@ private static void checkProxyAccess(Class<?> caller,
   * 如果传入的类加载器 loader 为空，并且调用者的类加载器 ccl 不为空，则通过 sm.checkPermission 方法检查获取类加载器的权限。
   * 调用 ReflectUtil.checkProxyPackageAccess 方法检查调用者的类加载器 ccl 是否有权限访问代理类的包。
 
-```java
+```text
 private static Object newProxyInstance(Class<?> caller, // null if no SecurityManager
                                        Constructor<?> cons,
                                        InvocationHandler h) {
@@ -126,7 +126,7 @@ private static Object newProxyInstance(Class<?> caller, // null if no SecurityMa
 * 然后，使用代理类的构造函数 cons 和指定的 InvocationHandler 对象 h 创建代理对象。
 * 如果在创建代理对象的过程中出现异常，将其捕获并抛出相应的异常。
 
-```java
+```text
 private static void checkNewProxyPermission(Class<?> caller, Class<?> proxyClass) {
     SecurityManager sm = System.getSecurityManager();
     if (sm != null) {
